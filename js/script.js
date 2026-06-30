@@ -14,7 +14,7 @@ navLinks?.querySelectorAll("a").forEach((link) => link.addEventListener("click",
   mobileMenu?.setAttribute("aria-expanded", "false");
 }));
 
-const celebrationDate = new Date("2026-08-08T19:00:00-03:00");
+const celebrationDate = new Date("2026-08-08T18:00:00-03:00");
 const countdownIds = ["days", "hours", "minutes", "seconds"];
 
 function updateCountdown() {
