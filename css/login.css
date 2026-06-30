@@ -23,28 +23,6 @@ body {
   overflow-x: hidden;
 }
 
-.login-watermark-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.login-watermark {
-  position: absolute;
-  display: block;
-  opacity: 0;
-  filter: blur(0.1px);
-  transform: translate(-50%, -50%) rotate(var(--rotation));
-  animation: watermarkFadeIn 0.9s ease forwards;
-  animation-delay: var(--delay);
-}
-
-.admin-login-page .login-watermark {
-  opacity: 0;
-}
-
 .login-container {
   position: relative;
   z-index: 1;
@@ -57,33 +35,6 @@ body {
   padding: 50px 40px;
   box-shadow: 0 20px 60px var(--color-accent-surface-shadow);
   text-align: center;
-}
-
-@keyframes watermarkFadeIn {
-  to {
-    opacity: 0.24;
-  }
-}
-
-.admin-login-page .login-watermark {
-  animation-name: adminWatermarkFadeIn;
-}
-
-@keyframes adminWatermarkFadeIn {
-  to {
-    opacity: 0.18;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .login-watermark {
-    animation: none;
-    opacity: 0.2;
-  }
-
-  .admin-login-page .login-watermark {
-    opacity: 0.15;
-  }
 }
 
 .login-container h1 {
