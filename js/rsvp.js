@@ -590,8 +590,8 @@ form.addEventListener("submit", async (e) => {
 
     showToast(
       wasEditing
-        ? "❤️ Confirmação atualizada com sucesso!"
-        : "❤️ Presença confirmada com sucesso!",
+        ? "💜 Confirmação atualizada com sucesso!"
+        : "💜 Presença confirmada com sucesso!",
     );
   } catch (error) {
     console.error(error);

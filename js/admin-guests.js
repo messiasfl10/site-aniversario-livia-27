@@ -345,11 +345,6 @@ window.openGuestDetailsModal = function (guest) {
             ? '<span class="admin-badge badge-available">Ativo</span>'
             : '<span class="admin-badge badge-danger">Inativo</span>'
         }
-        ${
-          guest.is_admin
-            ? '<span class="admin-badge badge-bought">Admin</span>'
-            : '<span class="admin-badge badge-muted">Convidado</span>'
-        }
       </div>
     </section>
 
@@ -393,7 +388,7 @@ function renderGuestsTable(guests) {
   if (!guests.length) {
     guestsTableBody.innerHTML = `
       <tr>
-        <td colspan="10" class="admin-empty-state">
+        <td colspan="9" class="admin-empty-state">
           Nenhum convidado encontrado para os filtros selecionados.
         </td>
       </tr>
@@ -420,13 +415,6 @@ function renderGuestsTable(guests) {
               guest.active
                 ? '<span class="admin-badge badge-available">Ativo</span>'
                 : '<span class="admin-badge badge-danger">Inativo</span>'
-            }
-          </td>
-          <td>
-            ${
-              guest.is_admin
-                ? '<span class="admin-badge badge-bought">Admin</span>'
-                : '<span class="admin-badge badge-muted">-</span>'
             }
           </td>
           <td>
@@ -642,9 +630,6 @@ window.openEditGuestModal = function (guest) {
   document.getElementById("guestNameInput").value = guest.name || "";
   guestInviteTypeInput.value = guest.invite_type || "individual";
   document.getElementById("guestMaxGuestsInput").value = guest.max_guests || 0;
-  document.getElementById("guestIsAdminInput").checked = Boolean(
-    guest.is_admin,
-  );
 
   if (guest.invite_type === "couple") {
     coupleFields.style.display = "block";
@@ -975,7 +960,6 @@ guestForm.addEventListener("submit", async (event) => {
   const maxGuests = Number(
     document.getElementById("guestMaxGuestsInput").value || 0,
   );
-  const isAdmin = document.getElementById("guestIsAdminInput").checked;
 
   let coupleMembers = null;
 
@@ -995,7 +979,6 @@ guestForm.addEventListener("submit", async (event) => {
     invite_type: inviteType,
     couple_members: coupleMembers,
     max_guests: maxGuests,
-    is_admin: isAdmin,
   };
 
   if (!editingGuest) {

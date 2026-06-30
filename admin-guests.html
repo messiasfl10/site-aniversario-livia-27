@@ -91,15 +91,6 @@
             </select>
           </div>
 
-          <div class="admin-filter-field">
-            <label for="guestAdminFilter">Admin</label>
-            <select id="guestAdminFilter">
-              <option value="">Todos</option>
-              <option value="admin">Administradores</option>
-              <option value="guest">Convidados</option>
-            </select>
-          </div>
-
           <div class="admin-filter-actions">
             <span id="guestFilterCount" class="admin-filter-count"></span>
 
@@ -140,11 +131,6 @@
                 <th>
                   <button class="admin-sort-button" data-guest-sort="status">
                     Status
-                  </button>
-                </th>
-                <th>
-                  <button class="admin-sort-button" data-guest-sort="admin">
-                    Admin
                   </button>
                 </th>
                 <th>
@@ -215,11 +201,6 @@
             <label>Quantidade de Acompanhantes</label>
             <input type="number" id="guestMaxGuestsInput" min="0" value="0" />
           </div>
-
-          <label class="admin-checkbox">
-            <input type="checkbox" id="guestIsAdminInput" />
-            É administrador
-          </label>
 
           <button type="submit" class="admin-save-button">
             Salvar Convidado
