@@ -1,0 +1,8 @@
+# Supabase local state and function secrets
+supabase/.temp/
+supabase/functions/.env
+supabase/functions/.env.*
+!supabase/functions/.env.example
+
+# Database exports may contain personal data
+backups/

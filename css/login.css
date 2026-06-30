@@ -1,0 +1,232 @@
+@import url("./tokens.css");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(
+    135deg,
+    var(--color-background) 0%,
+    var(--color-background-tint) 100%
+  );
+  font-family: var(--font-body);
+  color: var(--color-text);
+  overflow-x: hidden;
+}
+
+.login-watermark-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.login-watermark {
+  position: absolute;
+  display: block;
+  opacity: 0;
+  filter: blur(0.1px);
+  transform: translate(-50%, -50%) rotate(var(--rotation));
+  animation: watermarkFadeIn 0.9s ease forwards;
+  animation-delay: var(--delay);
+}
+
+.admin-login-page .login-watermark {
+  opacity: 0;
+}
+
+.login-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-surface);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-3xl);
+  padding: 50px 40px;
+  box-shadow: 0 20px 60px var(--color-accent-surface-shadow);
+  text-align: center;
+}
+
+@keyframes watermarkFadeIn {
+  to {
+    opacity: 0.24;
+  }
+}
+
+.admin-login-page .login-watermark {
+  animation-name: adminWatermarkFadeIn;
+}
+
+@keyframes adminWatermarkFadeIn {
+  to {
+    opacity: 0.18;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-watermark {
+    animation: none;
+    opacity: 0.2;
+  }
+
+  .admin-login-page .login-watermark {
+    opacity: 0.15;
+  }
+}
+
+.login-container h1 {
+  font-size: 42px;
+  font-family: var(--font-heading);
+  color: var(--color-accent-deep);
+  margin-bottom: 16px;
+}
+
+.login-container p {
+  color: var(--color-text-muted);
+  margin-bottom: 36px;
+  line-height: 1.6;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-input-border);
+  background: var(--color-surface-strong);
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.login-form input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
+}
+
+.login-form button {
+  border: none;
+  padding: 16px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(
+    135deg,
+    var(--color-accent),
+    var(--color-accent-strong)
+  );
+  color: var(--color-inverse);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-form button:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  box-shadow: 0 12px 30px var(--color-accent-shadow);
+}
+
+.login-form button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.captcha-container {
+  display: flex;
+  width: 100%;
+  min-height: 65px;
+  align-items: center;
+  justify-content: center;
+}
+
+.captcha-container[hidden] {
+  display: none;
+}
+
+@media (max-width: 380px) {
+  .captcha-container {
+    min-height: 140px;
+  }
+}
+
+#inviteCode {
+  text-transform: uppercase;
+}
+
+.login-eyebrow {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.login-field {
+  display: grid;
+  gap: 8px;
+  text-align: left;
+}
+
+.login-field label {
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.login-feedback,
+#loginError {
+  margin-top: 20px;
+  color: var(--color-danger-strong);
+  font-size: 14px;
+  min-height: 20px;
+}
+
+#loginError.success {
+  color: var(--color-success);
+}
+
+.login-secondary-link {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-secondary-link:hover {
+  text-decoration: underline;
+}
+
+.admin-login-container {
+  max-width: 460px;
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 40px 24px;
+  }
+
+  .login-container h1 {
+    font-size: 34px;
+  }
+}

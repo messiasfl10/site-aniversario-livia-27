@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>RSVP | Painel Admin | Ana Livia</title>
+
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <link rel="stylesheet" href="./css/admin.css" />
+  </head>
+
+  <body class="admin-auth-pending">
+    <main class="admin-page">
+      <section class="admin-header">
+        <div>
+          <p class="section-subtitle">Painel Administrativo</p>
+
+          <h1>RSVP</h1>
+        </div>
+
+        <button id="logoutButton" class="admin-logout">Sair</button>
+      </section>
+
+      <nav class="admin-nav" aria-label="Navegação administrativa">
+        <a class="admin-nav-link" href="./admin-dashboard.html">Dashboard</a>
+        <a class="admin-nav-link active" href="./admin-rsvps.html">RSVP</a>
+        <a class="admin-nav-link" href="./admin-guests.html">Convidados</a>
+        <a class="admin-nav-link" href="./admin-settings.html">
+          Configurações
+        </a>
+      </nav>
+
+      <section class="admin-section" id="rsvps">
+        <div class="admin-section-header">
+          <div>
+            <p class="section-subtitle">RSVP</p>
+
+            <h2>Confirmações de Presença</h2>
+          </div>
+
+          <div class="admin-section-actions">
+            <button id="exportRSVPsButton" class="admin-action-button">
+              Exportar CSV
+            </button>
+
+            <a class="admin-action-button success" href="./admin-guests.html">
+              RSVP manual
+            </a>
+          </div>
+        </div>
+
+        <div class="admin-filters" aria-label="Filtros de RSVP">
+          <div class="admin-filter-field">
+            <label for="rsvpSearchInput">Buscar</label>
+            <input
+              type="search"
+              id="rsvpSearchInput"
+              placeholder="Convidado, acompanhante ou mensagem"
+            />
+          </div>
+
+          <div class="admin-filter-field">
+            <label for="rsvpPresenceFilter">Presença</label>
+            <select id="rsvpPresenceFilter">
+              <option value="">Todas</option>
+              <option value="Sim">Sim</option>
+              <option value="Não">Não</option>
+            </select>
+          </div>
+
+          <div class="admin-filter-field">
+            <label for="rsvpCompanionFilter">Acompanhantes</label>
+            <select id="rsvpCompanionFilter">
+              <option value="">Todos</option>
+              <option value="with">Com acompanhantes</option>
+              <option value="without">Sem acompanhantes</option>
+            </select>
+          </div>
+
+          <div class="admin-filter-field">
+            <label for="rsvpBuffetFilter">Buffet</label>
+            <select id="rsvpBuffetFilter">
+              <option value="">Todas as Categorias</option>
+              <option value="paying">Com Pagantes</option>
+              <option value="children">Com Crianças</option>
+              <option value="child-paying">Com Criança Pagante</option>
+              <option value="child-non-paying">
+                Com Criança Não Pagante
+              </option>
+              <option value="child-unknown">Com Criança Sem Idade</option>
+            </select>
+          </div>
+
+          <div class="admin-filter-actions">
+            <span id="rsvpFilterCount" class="admin-filter-count"></span>
+
+            <button
+              type="button"
+              id="clearRSVPFiltersButton"
+              class="admin-clear-filters"
+            >
+              Limpar filtros
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>
+                  <button class="admin-sort-button" data-rsvp-sort="guest">
+                    Convidado
+                  </button>
+                </th>
+                <th>
+                  <button class="admin-sort-button" data-rsvp-sort="presence">
+                    Presença
+                  </button>
+                </th>
+                <th>
+                  <button class="admin-sort-button" data-rsvp-sort="companions">
+                    Qtd.
+                  </button>
+                </th>
+                <th>Acompanhantes</th>
+                <th>Restrição alimentar</th>
+                <th>Mensagem</th>
+                <th>
+                  <button class="admin-sort-button" data-rsvp-sort="updated">
+                    Atualizado em
+                  </button>
+                </th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+
+            <tbody id="rsvpsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <div id="adminToast" class="admin-toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+    <script src="./js/supabase.js"></script>
+
+    <script src="./js/admin-common.js"></script>
+
+    <script src="./js/admin-bootstrap.js"></script>
+  </body>
+</html>
+
+

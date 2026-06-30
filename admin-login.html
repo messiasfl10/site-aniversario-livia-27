@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acesso Administrativo | Ana Livia</title>
+    <link rel="stylesheet" href="css/login.css" />
+  </head>
+  <body class="admin-login-page">
+    <main class="login-container admin-login-container">
+      <span class="login-eyebrow">Painel Administrativo</span>
+      <h1>Ana Livia</h1>
+      <p>Entre com o e-mail e a senha da conta administrativa.</p>
+
+      <form id="adminLoginForm" class="login-form">
+        <div class="login-field">
+          <label for="adminEmail">E-mail</label>
+          <input
+            type="email"
+            id="adminEmail"
+            name="email"
+            autocomplete="username"
+            required
+          />
+        </div>
+
+        <div class="login-field">
+          <label for="adminPassword">Senha</label>
+          <input
+            type="password"
+            id="adminPassword"
+            name="password"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <div
+          id="adminCaptcha"
+          class="captcha-container"
+          aria-label="Validação de segurança"
+          hidden
+        ></div>
+
+        <button type="submit" id="adminLoginButton">Entrar</button>
+      </form>
+
+      <div id="loginError" class="login-feedback" aria-live="polite"></div>
+
+      <a class="login-secondary-link" href="login.html">
+        Entrar com Código de Convite
+      </a>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/captcha-config.js"></script>
+    <script src="js/turnstile-captcha.js"></script>
+    <script src="js/reference-decorations.js"></script>
+    <script src="js/admin-login.js"></script>
+  </body>
+</html>
+

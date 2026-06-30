@@ -1,0 +1,106 @@
+:root {
+  --color-primary: #6f3fa7;
+  --color-primary-light: #a26dd8;
+  --color-primary-hover: #5b2e90;
+  --color-primary-soft: rgba(111, 63, 167, 0.08);
+  --color-primary-extra-faint: rgba(111, 63, 167, 0.04);
+  --color-primary-faint: rgba(111, 63, 167, 0.06);
+  --color-primary-light-soft: rgba(111, 63, 167, 0.1);
+  --color-primary-muted: rgba(111, 63, 167, 0.12);
+  --color-primary-selected: rgba(111, 63, 167, 0.15);
+  --color-primary-hover-soft: rgba(111, 63, 167, 0.22);
+  --color-accent: #9333ea;
+  --color-accent-strong: #7c3aed;
+  --color-accent-deep: #4c1d95;
+  --color-accent-mid: #8b5cf6;
+  --color-accent-light: #d8b4fe;
+  --color-accent-pale: #e9d9ff;
+  --color-accent-soft: rgba(147, 51, 234, 0.1);
+  --color-accent-shadow: rgba(124, 58, 237, 0.25);
+  --color-accent-surface-shadow: rgba(124, 58, 237, 0.12);
+
+  --color-background: #faf7fb;
+  --color-background-tint: #f5eff8;
+  --color-surface: rgba(255, 255, 255, 0.75);
+  --color-surface-muted: rgba(255, 255, 255, 0.65);
+  --color-surface-faint: rgba(255, 255, 255, 0.6);
+  --color-surface-strong: rgba(255, 255, 255, 0.95);
+  --color-surface-input: rgba(255, 255, 255, 0.9);
+  --color-surface-soft: rgba(255, 255, 255, 0.72);
+  --color-surface-border: rgba(255, 255, 255, 0.4);
+  --color-proposal-surface: rgba(233, 216, 255, 0.55);
+  --color-border: rgba(111, 63, 167, 0.08);
+  --color-border-strong: rgba(111, 63, 167, 0.14);
+  --color-input-border: #e9d5ff;
+
+  --color-text: #2d2436;
+  --color-text-heading: #2c153f;
+  --color-text-heading-deep: #2d1841;
+  --color-text-muted: #6f6878;
+  --color-text-faded: #8f8598;
+  --color-text-subtle: #4b5563;
+  --color-hero-text: #f5edff;
+  --color-muted-soft: rgba(107, 114, 128, 0.12);
+  --color-inverse: #ffffff;
+  --color-overlay: rgba(0, 0, 0, 0.45);
+  --color-overlay-soft: rgba(0, 0, 0, 0.35);
+  --color-hero-overlay: rgba(70, 20, 120, 0.45);
+  --color-toast-bg: rgba(35, 25, 45, 0.92);
+
+  --color-success: #15803d;
+  --color-success-soft: rgba(34, 197, 94, 0.14);
+  --color-success-subtle: rgba(34, 197, 94, 0.12);
+  --color-success-hover: rgba(34, 197, 94, 0.24);
+
+  --color-danger: #b91c1c;
+  --color-danger-strong: #dc2626;
+  --color-danger-soft: rgba(239, 68, 68, 0.12);
+  --color-danger-hover: rgba(239, 68, 68, 0.22);
+
+  --color-warning: #a16207;
+  --color-warning-soft: rgba(234, 179, 8, 0.14);
+  --color-warning-hover: rgba(234, 179, 8, 0.24);
+
+  --color-info: #1d4ed8;
+  --color-info-soft: rgba(59, 130, 246, 0.12);
+
+  --font-body: "Inter", sans-serif;
+  --font-heading: "Cormorant Garamond", serif;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 16px;
+  --radius-xl: 18px;
+  --radius-2xl: 24px;
+  --radius-3xl: 28px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 5px 20px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 40px rgba(111, 63, 167, 0.15);
+  --shadow-card: 0 14px 35px rgba(111, 63, 167, 0.08);
+  --shadow-interactive: 0 12px 28px rgba(111, 63, 167, 0.12);
+  --shadow-interactive-strong: 0 12px 28px rgba(111, 63, 167, 0.14);
+  --shadow-primary-strong: 0 10px 30px rgba(111, 63, 167, 0.4);
+  --shadow-polaroid: 0 15px 35px rgba(0, 0, 0, 0.08);
+  --shadow-accent-glow: 0 0 25px rgba(139, 92, 246, 0.6);
+  --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.15);
+  --shadow-toast: 0 15px 40px rgba(0, 0, 0, 0.2);
+
+  --space-xs: 0.35rem;
+  --space-sm: 0.6rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* Backward-compatible aliases used by existing page CSS files. */
+  --primary: var(--color-primary);
+  --primary-light: var(--color-primary-light);
+  --background: var(--color-background);
+  --white: rgba(255, 255, 255, 0.7);
+  --text: var(--color-text);
+  --text-light: var(--color-text-muted);
+  --border: rgba(255, 255, 255, 0.3);
+  --shadow: var(--shadow-md);
+}

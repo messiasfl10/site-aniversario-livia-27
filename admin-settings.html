@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Configurações | Painel Admin | Ana Livia</title>
+
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <link rel="stylesheet" href="./css/admin.css" />
+  </head>
+
+  <body class="admin-auth-pending">
+    <main class="admin-page">
+      <section class="admin-header">
+        <div>
+          <p class="section-subtitle">Painel Administrativo</p>
+
+          <h1>Configurações</h1>
+        </div>
+
+        <button id="logoutButton" class="admin-logout">Sair</button>
+      </section>
+
+      <nav class="admin-nav" aria-label="Navegação administrativa">
+        <a class="admin-nav-link" href="./admin-dashboard.html">Dashboard</a>
+        <a class="admin-nav-link" href="./admin-rsvps.html">RSVP</a>
+        <a class="admin-nav-link" href="./admin-guests.html">Convidados</a>
+        <a class="admin-nav-link active" href="./admin-settings.html">
+          Configurações
+        </a>
+      </nav>
+
+      <section class="admin-section">
+        <div class="admin-section-header">
+          <div>
+            <p class="section-subtitle">Dados Globais</p>
+
+            <h2>Configurações do Site</h2>
+          </div>
+        </div>
+
+        <form id="settingsForm" class="admin-settings-form">
+          <div class="admin-settings-card">
+            <div class="admin-settings-card-header">
+              <span>Pagamentos PIX</span>
+              <p>Dados usados para gerar o PIX Copia e Cola e o QR Code.</p>
+            </div>
+
+            <div class="admin-form-grid">
+              <div class="admin-form-group">
+                <label for="pixKeyInput">Chave PIX</label>
+                <input
+                  type="text"
+                  id="pixKeyInput"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+
+              <div class="admin-form-group">
+                <label for="merchantNameInput">Nome do Recebedor</label>
+                <input
+                  type="text"
+                  id="merchantNameInput"
+                  maxlength="25"
+                  autocomplete="organization"
+                  required
+                />
+              </div>
+
+              <div class="admin-form-group">
+                <label for="merchantCityInput">Cidade do Recebedor</label>
+                <input
+                  type="text"
+                  id="merchantCityInput"
+                  maxlength="15"
+                  autocomplete="address-level2"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-settings-card">
+            <div class="admin-settings-card-header">
+              <span>Contato</span>
+              <p>Número usado para envio de comprovantes pelo WhatsApp.</p>
+            </div>
+
+            <div class="admin-form-grid">
+              <div class="admin-form-group">
+                <label for="whatsappNumberInput">WhatsApp</label>
+                <input
+                  type="tel"
+                  id="whatsappNumberInput"
+                  inputmode="tel"
+                  placeholder="5511999999999"
+                  minlength="12"
+                  maxlength="19"
+                  required
+                />
+                <small class="admin-field-help">
+                  Use 55 + DDD + número, apenas números.
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-settings-card">
+            <div class="admin-settings-card-header">
+              <span>Regra do Buffet</span>
+              <p>
+                Define a partir de qual idade uma criança entra na contagem de
+                convidados pagantes.
+              </p>
+            </div>
+
+            <div class="admin-form-grid">
+              <div class="admin-form-group">
+                <label for="buffetPayingAgeInput">Idade Mínima Pagante</label>
+                <input
+                  type="number"
+                  id="buffetPayingAgeInput"
+                  min="1"
+                  max="18"
+                  step="1"
+                  value="7"
+                  required
+                />
+                <small class="admin-field-help">
+                  Ex.: 7 significa que crianças de até 6 anos não pagam.
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="admin-save-button">
+            Salvar Configurações
+          </button>
+        </form>
+      </section>
+    </main>
+
+    <div id="adminToast" class="admin-toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+    <script src="./js/supabase.js"></script>
+
+    <script src="./js/admin-common.js"></script>
+
+    <script src="./js/admin-bootstrap.js"></script>
+  </body>
+</html>
+
+

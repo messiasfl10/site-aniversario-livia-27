@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Convidados | Painel Admin | Ana Livia</title>
+
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <link rel="stylesheet" href="./css/admin.css" />
+  </head>
+
+  <body class="admin-auth-pending">
+    <main class="admin-page">
+      <section class="admin-header">
+        <div>
+          <p class="section-subtitle">Painel Administrativo</p>
+
+          <h1>Convidados</h1>
+        </div>
+
+        <button id="logoutButton" class="admin-logout">Sair</button>
+      </section>
+
+      <nav class="admin-nav" aria-label="Navegação administrativa">
+        <a class="admin-nav-link" href="./admin-dashboard.html">Dashboard</a>
+        <a class="admin-nav-link" href="./admin-rsvps.html">RSVP</a>
+        <a class="admin-nav-link active" href="./admin-guests.html">
+          Convidados
+        </a>
+        <a class="admin-nav-link" href="./admin-settings.html">
+          Configurações
+        </a>
+      </nav>
+
+      <section class="admin-section" id="guests">
+        <div class="admin-section-header">
+          <div>
+            <p class="section-subtitle">Convidados</p>
+
+            <h2>Gestão de Convidados</h2>
+          </div>
+
+          <div class="admin-section-actions">
+            <button id="exportGuestsButton" class="admin-action-button">
+              Exportar CSV
+            </button>
+
+            <button id="openGuestModalButton" class="admin-action-button success">
+              + Novo Convidado
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-filters" aria-label="Filtros de convidados">
+          <div class="admin-filter-field">
+            <label for="guestSearchInput">Buscar</label>
+            <input
+              type="search"
+              id="guestSearchInput"
+              placeholder="Nome ou código do convite"
+            />
+          </div>
+
+          <div class="admin-filter-field">
+            <label for="guestStatusFilter">Status</label>
+            <select id="guestStatusFilter">
+              <option value="">Todos</option>
+              <option value="active">Ativos</option>
+              <option value="inactive">Inativos</option>
+            </select>
+          </div>
+
+          <div class="admin-filter-field">
+            <label for="guestConfirmedFilter">RSVP</label>
+            <select id="guestConfirmedFilter">
+              <option value="">Todos</option>
+              <option value="confirmed">Confirmados</option>
+              <option value="pending">Pendentes</option>
+            </select>
+          </div>
+
+          <div class="admin-filter-field">
+            <label for="guestTypeFilter">Tipo</label>
+            <select id="guestTypeFilter">
+              <option value="">Todos</option>
+              <option value="individual">Individual</option>
+              <option value="couple">Casal</option>
+            </select>
+          </div>
+
+          <div class="admin-filter-field">
+            <label for="guestAdminFilter">Admin</label>
+            <select id="guestAdminFilter">
+              <option value="">Todos</option>
+              <option value="admin">Administradores</option>
+              <option value="guest">Convidados</option>
+            </select>
+          </div>
+
+          <div class="admin-filter-actions">
+            <span id="guestFilterCount" class="admin-filter-count"></span>
+
+            <button
+              type="button"
+              id="clearGuestFiltersButton"
+              class="admin-clear-filters"
+            >
+              Limpar filtros
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>
+                  <button class="admin-sort-button" data-guest-sort="name">
+                    Nome
+                  </button>
+                </th>
+                <th>
+                  <button class="admin-sort-button" data-guest-sort="type">
+                    Tipo
+                  </button>
+                </th>
+                <th>
+                  <button class="admin-sort-button" data-guest-sort="companions">
+                    Acompanhantes
+                  </button>
+                </th>
+                <th>
+                  <button class="admin-sort-button" data-guest-sort="confirmed">
+                    Confirmado
+                  </button>
+                </th>
+                <th>
+                  <button class="admin-sort-button" data-guest-sort="status">
+                    Status
+                  </button>
+                </th>
+                <th>
+                  <button class="admin-sort-button" data-guest-sort="admin">
+                    Admin
+                  </button>
+                </th>
+                <th>
+                  <button class="admin-sort-button" data-guest-sort="code">
+                    Código
+                  </button>
+                </th>
+                <th>
+                  <button class="admin-sort-button" data-guest-sort="lastAccess">
+                    Último acesso
+                  </button>
+                </th>
+                <th>
+                  <button class="admin-sort-button" data-guest-sort="accesses">
+                    Acessos
+                  </button>
+                </th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+
+            <tbody id="guestsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <div class="admin-modal" id="guestModal">
+      <div class="admin-modal-content">
+        <button
+          type="button"
+          class="admin-modal-close"
+          id="closeGuestModalButton"
+        >
+          ×
+        </button>
+
+        <h2 id="guestModalTitle">Novo Convidado</h2>
+
+        <form id="guestForm">
+          <div class="admin-form-group">
+            <label>Nome do Convite</label>
+            <input type="text" id="guestNameInput" required />
+          </div>
+
+          <div class="admin-form-group">
+            <label>Tipo de Convite</label>
+
+            <select id="guestInviteTypeInput">
+              <option value="individual">Individual</option>
+              <option value="couple">Casal</option>
+            </select>
+          </div>
+
+          <div id="coupleFields" class="is-hidden">
+            <div class="admin-form-group">
+              <label>Nome da Pessoa 1</label>
+              <input type="text" id="coupleMemberOneInput" />
+            </div>
+
+            <div class="admin-form-group">
+              <label>Nome da Pessoa 2</label>
+              <input type="text" id="coupleMemberTwoInput" />
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label>Quantidade de Acompanhantes</label>
+            <input type="number" id="guestMaxGuestsInput" min="0" value="0" />
+          </div>
+
+          <label class="admin-checkbox">
+            <input type="checkbox" id="guestIsAdminInput" />
+            É administrador
+          </label>
+
+          <button type="submit" class="admin-save-button">
+            Salvar Convidado
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="admin-modal" id="guestDetailsModal">
+      <div class="admin-modal-content admin-details-modal-content">
+        <button
+          type="button"
+          class="admin-modal-close"
+          id="closeGuestDetailsModalButton"
+        >
+          &times;
+        </button>
+
+        <h2 id="guestDetailsTitle">Detalhes do Convidado</h2>
+
+        <div id="guestDetailsContent" class="admin-details-content"></div>
+      </div>
+    </div>
+
+    <div id="adminToast" class="admin-toast"></div>
+
+    <div class="admin-modal" id="adminRSVPModal">
+      <div class="admin-modal-content">
+        <button
+          type="button"
+          class="admin-modal-close"
+          id="closeAdminRSVPModalButton"
+        >
+          ×
+        </button>
+
+        <h2 id="adminRSVPModalTitle">Confirmar Presença</h2>
+
+        <form id="adminRSVPForm">
+          <div class="admin-form-group">
+            <label> E-mail </label>
+            <input type="email" id="adminRSVPEmailInput" />
+          </div>
+
+          <div class="admin-form-group">
+            <label> Telefone / WhatsApp </label>
+            <input
+              type="tel"
+              id="adminRSVPPhoneInput"
+              placeholder="(85) 99999-9999"
+            />
+          </div>
+
+          <div id="adminRSVPPresenceGroup" class="admin-form-group">
+            <label> Presença </label>
+
+            <select id="adminRSVPPresenceInput">
+              <option value="Sim">Sim</option>
+              <option value="Não">Não</option>
+            </select>
+          </div>
+
+          <div id="adminRSVPCoupleMembers" class="is-hidden"></div>
+
+          <div class="admin-form-group">
+            <label> Quantidade de Acompanhantes </label>
+            <select id="adminRSVPGuestCountInput"></select>
+          </div>
+
+          <div id="adminRSVPGuestFields"></div>
+
+          <div class="admin-form-group">
+            <label> Restrição Alimentar </label>
+            <input type="text" id="adminRSVPFoodInput" />
+          </div>
+
+          <div class="admin-form-group">
+            <label> Mensagem </label>
+            <textarea id="adminRSVPMessageInput" rows="4"></textarea>
+          </div>
+
+          <button
+            type="button"
+            id="deleteAdminRSVPButton"
+            class="admin-action-button danger is-full-width has-bottom-space is-hidden"
+          >
+            Remover confirmação
+          </button>
+
+          <button type="submit" class="admin-save-button">
+            Salvar confirmação
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+    <script src="./js/supabase.js"></script>
+
+    <script src="./js/admin-common.js"></script>
+
+    <script src="./js/admin-bootstrap.js"></script>
+  </body>
+</html>
+
+

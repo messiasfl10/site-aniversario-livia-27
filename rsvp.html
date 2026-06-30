@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RSVP • Ana Livia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/rsvp.css" />
+    <link rel="stylesheet" href="./css/reference-rails.css" />
+  </head>
+  <body class="guest-auth-pending site-reference-rails">
+    <!-- Navbar -->
+    <header class="navbar navbar-light">
+      <div class="container nav-content">
+        <div class="logo">Ana Livia</div>
+
+        <ul class="nav-links">
+          <li>
+            <a href="./index.html"> Início </a>
+          </li>
+
+
+          <li>
+            <a href="./rsvp.html" class="active"> RSVP </a>
+          </li>
+
+          <li>
+          </li>
+
+          <li class="guest-info">
+            <span id="guestNameDisplay"></span>
+          </li>
+
+          <li>
+            <button id="logoutButton" class="logout-button">Sair</button>
+          </li>
+        </ul>
+
+        <button class="mobile-menu">☰</button>
+      </div>
+    </header>
+    <section class="rsvp-hero">
+      <div class="overlay"></div>
+      <div class="hero-content">
+        <p class="hero-subtitle">RSVP</p>
+        <h1>Confirme sua presença</h1>
+        <p class="hero-text">
+          Sua presença tornará esse momento ainda mais especial.
+        </p>
+      </div>
+    </section>
+    <section class="rsvp-section">
+      <div class="container">
+        <div class="rsvp-card">
+          <form id="rsvpForm">
+            <div class="form-group">
+              <label>Nome completo</label>
+              <input type="text" name="name" required />
+            </div>
+            <div class="form-group">
+              <label>E-mail</label>
+              <input type="email" name="email" required />
+            </div>
+            <div class="form-group">
+              <label> Telefone / WhatsApp </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="(85) 99999-9999"
+              />
+            </div>
+            <div
+              id="coupleMembersSection"
+              class="form-group is-hidden"
+            >
+              <label>
+                Confirme individualmente a presença de cada convidado
+              </label>
+
+              <div id="coupleMembersFields"></div>
+            </div>
+
+            <div class="form-group">
+              <label> Você poderá comparecer? </label>
+
+              <div class="radio-group">
+                <label>
+                  <input type="radio" name="presence" value="Sim" required />
+
+                  Sim
+                </label>
+
+                <label>
+                  <input type="radio" name="presence" value="Não" />
+
+                  Não
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label> Quantidade de acompanhantes </label>
+              <select id="guestCount" name="guestCount">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <div id="guestFields"></div>
+            <div class="form-group">
+              <label> Restrição alimentar </label>
+              <input
+                type="text"
+                name="food"
+                placeholder="Ex.: intolerância à lactose ou alergia a frutos do mar"
+              />
+            </div>
+            <div class="form-group">
+              <label> Mensagem para Ana Livia </label>
+              <textarea
+                name="message"
+                placeholder="Se quiser, deixe uma mensagem carinhosa para nós 💜"
+              ></textarea>
+            </div>
+            <button type="submit" class="submit-button">
+              Confirmar presença
+            </button>
+            <div class="success-message" id="successMessage">
+              ❤️ Obrigado por confirmar sua presença!
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="./js/supabase.js"></script>
+    <script src="./js/guest-auth-config.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/guest-auth.js"></script>
+    <script src="./js/guest-data.js"></script>
+    <script src="./js/public-common.js"></script>
+    <script src="./js/reference-decorations.js"></script>
+    <script src="./js/guest-bootstrap.js"></script>
+  </body>
+  <!-- Toast -->
+  <div id="toast" class="toast">
+    <div class="toast-content">
+      <span id="toastMessage"> Mensagem </span>
+    </div>
+  </div>
+</html>
+
