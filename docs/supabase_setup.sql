@@ -1,4 +1,4 @@
--- Aniversário da Ana Livia — instalação completa e idempotente
+-- Aniversário da Livia — instalação completa e idempotente
 create extension if not exists pgcrypto;
 
 create table if not exists public.guests (

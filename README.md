@@ -1,4 +1,4 @@
-# Aniversário da Ana Livia
+# Aniversário da Livia
 
 Site de aniversário com acesso por código de convite, RSVP individual ou de casal e painel administrativo. A comemoração será em **8 de agosto de 2026, às 19h**, no Geek Bunker Burger, em Fortaleza.
 
