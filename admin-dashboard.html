@@ -3,34 +3,76 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Painel Administrativo | Livia</title>
+    <title>Visão Geral | Painel da Livia</title>
     <link rel="stylesheet" href="./css/style.css" />
     <link rel="stylesheet" href="./css/admin.css" />
   </head>
   <body class="admin-auth-pending">
-    <main class="admin-page">
+    <main class="admin-page admin-dashboard-page">
       <section class="admin-header">
-        <div><p class="section-subtitle">Aniversário da Livia</p><h1>Painel Administrativo</h1></div>
+        <div>
+          <p class="section-subtitle">Aniversário da Livia · 8 de agosto</p>
+          <h1>Visão geral</h1>
+          <p class="admin-header-description">Acompanhe os convites e a confirmação da festa em um só lugar.</p>
+        </div>
         <button id="logoutButton" class="admin-logout">Sair</button>
       </section>
-      <nav class="admin-nav" aria-label="Navegação administrativa">
-        <a class="admin-nav-link active" href="./admin-dashboard.html">Início</a>
-        <a class="admin-nav-link" href="./admin-rsvps.html">RSVP</a>
-        <a class="admin-nav-link" href="./admin-guests.html">Convidados</a>
-        <a class="admin-nav-link" href="./admin-settings.html">Configurações</a>
-      </nav>
-      <section class="metrics-section">
-        <div class="metrics-header"><h2>Organização da comemoração</h2></div>
-        <div class="admin-grid">
-          <a class="admin-card" href="./admin-guests.html"><span>Convites</span><strong>Gerenciar convidados</strong></a>
-          <a class="admin-card" href="./admin-rsvps.html"><span>Confirmações</span><strong>Acompanhar RSVPs</strong></a>
-          <a class="admin-card" href="./admin-settings.html"><span>Preferências</span><strong>Configurar evento</strong></a>
+      <nav class="admin-nav" aria-label="Navegação administrativa"></nav>
+
+      <section class="dashboard-kpi-grid" aria-label="Resumo do evento">
+        <a class="dashboard-kpi-card" href="./admin-guests.html?status=active">
+          <span class="dashboard-kpi-icon purple">✦</span><div><small>Convites ativos</small><strong id="activeInvites">—</strong><p id="invitePeopleHint">Carregando...</p></div>
+        </a>
+        <a class="dashboard-kpi-card" href="./admin-rsvps.html?presence=Sim">
+          <span class="dashboard-kpi-icon green">✓</span><div><small>Pessoas confirmadas</small><strong id="confirmedPeople">—</strong><p id="payingPeopleHint">Carregando...</p></div>
+        </a>
+        <a class="dashboard-kpi-card" href="./admin-guests.html?confirmed=pending">
+          <span class="dashboard-kpi-icon amber">⌛</span><div><small>Convites pendentes</small><strong id="pendingInvites">—</strong><p>Aguardando resposta</p></div>
+        </a>
+        <a class="dashboard-kpi-card" href="./admin-rsvps.html?presence=N%C3%A3o">
+          <span class="dashboard-kpi-icon rose">×</span><div><small>Não comparecerão</small><strong id="declinedInvites">—</strong><p>Convites com resposta “Não”</p></div>
+        </a>
+      </section>
+
+      <section class="dashboard-layout">
+        <article class="dashboard-panel dashboard-attendance-panel">
+          <div class="dashboard-panel-header"><div><p class="section-subtitle">Respostas</p><h2>Situação dos convites</h2></div><span id="responseRateBadge" class="dashboard-rate-badge">—</span></div>
+          <div class="dashboard-chart-body">
+            <div class="dashboard-donut" id="responseDonut" role="img" aria-label="Distribuição de respostas"><div><strong id="responseTotal">—</strong><span>respostas</span></div></div>
+            <div class="dashboard-legend">
+              <div><i class="legend-dot confirmed"></i><span>Com presença</span><strong id="yesInvites">—</strong></div>
+              <div><i class="legend-dot declined"></i><span>Não irão</span><strong id="noInvites">—</strong></div>
+              <div><i class="legend-dot pending"></i><span>Pendentes</span><strong id="pendingLegend">—</strong></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="dashboard-panel">
+          <div class="dashboard-panel-header"><div><p class="section-subtitle">Capacidade</p><h2>Ocupação planejada</h2></div></div>
+          <div class="capacity-summary"><strong id="capacityConfirmed">—</strong><span>de <b id="capacityTotal">—</b> pessoas planejadas</span></div>
+          <div class="capacity-track"><span id="capacityBar"></span></div>
+          <p class="capacity-caption" id="capacityCaption">Calculando ocupação...</p>
+          <div class="dashboard-mini-grid">
+            <div><span>Crianças</span><strong id="childrenCount">—</strong></div>
+            <div><span>Pagantes</span><strong id="payingCount">—</strong></div>
+            <div><span>Acompanhantes</span><strong id="companionsCount">—</strong></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="dashboard-panel dashboard-actions-panel">
+        <div class="dashboard-panel-header"><div><p class="section-subtitle">Atalhos</p><h2>O que você deseja fazer?</h2></div></div>
+        <div class="dashboard-action-grid">
+          <a href="./admin-guests.html" class="dashboard-action"><span>＋</span><div><strong>Novo convite</strong><small>Cadastre pessoas e casais</small></div></a>
+          <a href="./admin-rsvps.html" class="dashboard-action"><span>✓</span><div><strong>Ver confirmações</strong><small>Consulte presença e acompanhantes</small></div></a>
+          <a href="./admin-settings.html" class="dashboard-action"><span>⚙</span><div><strong>Regra do buffet</strong><small>Configure a idade mínima pagante</small></div></a>
         </div>
       </section>
     </main>
+    <div id="adminToast" class="admin-toast"></div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script src="./js/supabase.js"></script>
     <script src="./js/admin-common.js"></script>
-    <script src="./js/admin-bootstrap.js" data-admin-script="./js/admin-home.js"></script>
+    <script src="./js/admin-bootstrap.js"></script>
   </body>
 </html>

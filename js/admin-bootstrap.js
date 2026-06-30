@@ -1,7 +1,7 @@
 (function () {
   const ADMIN_LOGIN_PAGE = "admin-login.html";
   const PAGE_SCRIPTS = {
-    "admin-dashboard.html": ["js/admin-home.js"],
+    "admin-dashboard.html": ["js/buffet-metrics.js", "js/admin-home.js"],
     "admin-guests.html": [
       "js/admin-export.js",
       "js/child-age-options.js",
