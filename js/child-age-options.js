@@ -26,7 +26,7 @@
     const normalizedValue = String(selectedValue || "").trim();
     const standardAges = getStandardAges();
     const options = [
-      '<option value="">Selecione a idade no casamento</option>',
+      '<option value="">Selecione a idade na data da festa</option>',
     ];
 
     if (normalizedValue && !standardAges.includes(normalizedValue)) {

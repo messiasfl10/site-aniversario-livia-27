@@ -1275,7 +1275,7 @@
   white-space: normal;
 }
 
-.gift-situation-stack {
+.guest-situation-stack {
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;

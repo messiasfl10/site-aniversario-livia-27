@@ -333,7 +333,7 @@ window.openGuestDetailsModal = function (guest) {
   guestDetailsContent.innerHTML = `
     <section class="admin-details-section">
       <span class="admin-details-label">Resumo</span>
-      <div class="gift-situation-stack">
+      <div class="guest-situation-stack">
         ${renderInviteTypeBadge(guest.invite_type)}
         ${
           guest.confirmed
@@ -788,7 +788,7 @@ function renderAdminRSVPCompanionFields(companions = []) {
         }"
         data-index="${i}"
       >
-        <label>Idade da criança no casamento</label>
+        <label>Idade da criança na data da festa</label>
         <select
           class="admin-rsvp-companion-age"
           data-index="${i}"
@@ -797,7 +797,7 @@ function renderAdminRSVPCompanionFields(companions = []) {
           ${ChildAgeOptions.renderOptions(companion.age)}
         </select>
         <small class="admin-field-help">
-          Considere a idade que a criança terá na data do casamento.
+          Considere a idade que a criança terá em 8 de agosto de 2026.
         </small>
       </div>
     `;

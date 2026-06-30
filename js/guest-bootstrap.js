@@ -1,6 +1,5 @@
 (function () {
   const PAGE_SCRIPTS = {
-    "gifts.html": ["js/pix.js", "js/gifts.js"],
     "rsvp.html": ["js/child-age-options.js", "js/rsvp.js"],
   };
 

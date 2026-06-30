@@ -13,7 +13,7 @@ Site de aniversário com acesso por código de convite, RSVP individual ou de ca
 
 ## Configuração
 
-1. Crie um projeto Supabase separado e execute as migrações em `docs/` conforme os runbooks.
+1. Crie um projeto Supabase separado e siga `docs/rebuild_runbook.md`.
 2. Ative o login anônimo em **Authentication > Providers > Anonymous**.
 3. Informe a URL e a chave pública em `js/supabase.js`.
 4. Configure os secrets de `claim-invite` conforme `supabase/functions/.env.example` e publique a função.

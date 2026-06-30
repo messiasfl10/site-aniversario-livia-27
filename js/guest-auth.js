@@ -6,9 +6,7 @@
       "redirect",
     );
 
-    return requestedPage === "gifts" || requestedPage === "rsvp"
-      ? requestedPage
-      : "index";
+    return requestedPage === "rsvp" ? requestedPage : "index";
   }
 
   function getCurrentPage() {

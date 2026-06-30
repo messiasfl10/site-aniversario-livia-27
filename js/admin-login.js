@@ -2,7 +2,6 @@
   const ADMIN_DEFAULT_PAGE = "admin-dashboard.html";
   const ADMIN_PAGES = new Set([
     "admin-dashboard.html",
-    "admin-gifts.html",
     "admin-guests.html",
     "admin-rsvps.html",
     "admin-settings.html",

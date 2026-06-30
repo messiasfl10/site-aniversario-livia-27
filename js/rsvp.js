@@ -137,7 +137,7 @@ guestCount.addEventListener("change", () => {
         id="childAge_${i}"
       >
         <label>
-          Idade da criança no casamento
+          Idade da criança na data da festa
         </label>
 
         <select
@@ -148,7 +148,7 @@ guestCount.addEventListener("change", () => {
         </select>
 
         <small class="field-help">
-          Considere a idade que a criança terá na data do casamento.
+          Considere a idade que a criança terá em 8 de agosto de 2026.
         </small>
       </div>
     `;

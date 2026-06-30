@@ -11,7 +11,7 @@ function saveSession(guest) {
     expiresAt: Date.now() + SESSION_DURATION,
   };
 
-  localStorage.setItem("wedding_session", JSON.stringify(session));
+  localStorage.setItem("birthday_session", JSON.stringify(session));
 }
 
 /* =========================
@@ -19,7 +19,7 @@ function saveSession(guest) {
 ========================= */
 
 function getSession() {
-  const raw = localStorage.getItem("wedding_session");
+  const raw = localStorage.getItem("birthday_session");
 
   if (!raw) {
     return null;
@@ -74,7 +74,7 @@ function requireAuth() {
 ========================= */
 
 function logout() {
-  localStorage.removeItem("wedding_session");
+  localStorage.removeItem("birthday_session");
 }
 
 /* =========================
