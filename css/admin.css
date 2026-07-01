@@ -40,8 +40,8 @@ body {
 .admin-nav-brand > span { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,.16); font: 700 1.8rem var(--font-heading); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
 .admin-nav-brand strong, .admin-nav-brand small { display: block; }
 .admin-nav-brand strong { font: 600 1.35rem var(--font-heading); }
-.admin-nav-brand small { margin-top: .12rem; color: #ddd6fe; font-size: .72rem; text-transform: uppercase; letter-spacing: .14em; }
-.admin-nav-label { margin: 0 .75rem .55rem; color: #c4b5fd; font-size: .66rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.admin-nav-brand small { margin-top: .12rem; color: #e8c9f2; font-size: .72rem; text-transform: uppercase; letter-spacing: .14em; }
+.admin-nav-label { margin: 0 .75rem .55rem; color: #d7a8e4; font-size: .66rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
 
 .admin-nav-link {
   display: flex;
@@ -51,16 +51,16 @@ body {
   padding: .72rem .85rem;
   border-radius: 13px;
   background: transparent;
-  color: #ede9fe;
+  color: #f3e8f7;
   box-shadow: none;
   font-size: .9rem;
   font-weight: 500;
 }
 .admin-nav-link:hover { background: rgba(255,255,255,.09); color: white; }
-.admin-nav-link.active { background: rgba(168,85,247,.2); color: white; box-shadow: inset 3px 0 0 #c084fc; }
+.admin-nav-link.active { background: rgba(160,82,186,.24); color: white; box-shadow: inset 3px 0 0 #d7a8e4; }
 .admin-nav-icon { display: grid; place-items: center; width: 25px; height: 25px; font-size: 1.12rem; }
-.admin-nav-site-link { margin: auto .75rem 0; padding-top: 1.2rem; border-top: 1px solid rgba(255,255,255,.13); color: #f3e8ff; font-size: .82rem; text-decoration: none; }
-.admin-sidebar-logout { width: calc(100% - 1.5rem); margin: .65rem .75rem 0; padding: .7rem 0; border: 0; background: transparent; color: #f3e8ff; box-shadow: none; text-align: left; font-size: .82rem; font-weight: 500; }
+.admin-nav-site-link { margin: auto .75rem 0; padding-top: 1.2rem; border-top: 1px solid rgba(255,255,255,.13); color: #f3e8f7; font-size: .82rem; text-decoration: none; }
+.admin-sidebar-logout { width: calc(100% - 1.5rem); margin: .65rem .75rem 0; padding: .7rem 0; border: 0; background: transparent; color: #f3e8f7; box-shadow: none; text-align: left; font-size: .82rem; font-weight: 500; }
 .admin-sidebar-logout:hover { background: rgba(255,255,255,.1); color: white; }
 
 .admin-header { margin-bottom: 2rem; }
@@ -1589,10 +1589,10 @@ body .admin-nav-link {
   padding: .72rem .85rem;
   border-radius: 13px;
   background: transparent;
-  color: #ede9fe;
+  color: #f3e8f7;
   box-shadow: none;
 }
-body .admin-nav-link.active { background: rgba(168,85,247,.2); color: white; }
+body .admin-nav-link.active { background: rgba(160,82,186,.24); color: white; }
 body .admin-header { margin-bottom: 2rem; }
 
 /* Refined data pages: cleaner hierarchy without changing their structure. */
@@ -1603,21 +1603,21 @@ body .admin-header { margin-bottom: 2rem; }
   background: rgba(255, 255, 255, .82);
   box-shadow: 0 18px 50px rgba(76, 29, 149, .07);
 }
-.admin-section-header { margin-bottom: 1.4rem; padding-bottom: 1.15rem; border-bottom: 1px solid #ede9fe; }
+.admin-section-header { margin-bottom: 1.4rem; padding-bottom: 1.15rem; border-bottom: 1px solid #eadced; }
 .admin-section-header h2 { font-size: clamp(1.65rem, 3vw, 2.15rem); letter-spacing: -.025em; }
-.admin-filters { margin-bottom: 1.25rem; padding: 1rem 1.1rem; border: 1px solid #ede9fe; border-radius: 18px; background: #faf8ff; box-shadow: none; }
+.admin-filters { margin-bottom: 1.25rem; padding: 1rem 1.1rem; border: 1px solid #eadced; border-radius: 18px; background: #fcf8ff; box-shadow: none; }
 .admin-filter-field label { color: #6b5b7b; font-size: .72rem; font-weight: 700; letter-spacing: .045em; text-transform: uppercase; }
 .admin-filter-field input,
-.admin-filter-field select { min-height: 44px; border-color: #e4ddec; border-radius: 12px; background: #fff; transition: border-color .2s ease, box-shadow .2s ease; }
+.admin-filter-field select { min-height: 44px; border-color: #e3d2e7; border-radius: 12px; background: #fff; transition: border-color .2s ease, box-shadow .2s ease; }
 .admin-filter-count { padding-left: .15rem; color: #71657d; font-weight: 600; }
-.admin-table-wrapper { border: 1px solid #e9e2ef; border-radius: 18px; background: #fff; box-shadow: 0 10px 30px rgba(76, 29, 149, .06); }
+.admin-table-wrapper { border: 1px solid #e7d9ea; border-radius: 18px; background: #fff; box-shadow: 0 10px 30px rgba(86, 0, 114, .06); }
 .admin-table { border-collapse: separate; border-spacing: 0; }
 .admin-table th,
 .admin-table td { padding: 1rem 1.05rem; border-bottom-color: #eee9f2; }
-.admin-table th { position: sticky; top: 0; z-index: 1; background: #f7f3fb; color: #5b267c; font-size: .72rem; font-weight: 750; letter-spacing: .055em; text-transform: uppercase; }
+.admin-table th { position: sticky; top: 0; z-index: 1; background: #f6edf8; color: #560072; font-size: .72rem; font-weight: 750; letter-spacing: .055em; text-transform: uppercase; }
 .admin-table tbody tr { transition: background-color .18s ease, box-shadow .18s ease; }
-.admin-table tbody tr:nth-child(even) { background: #fcfbfd; }
-.admin-table tbody tr:hover { background: #faf5ff; box-shadow: inset 3px 0 0 #a855f7; }
+.admin-table tbody tr:nth-child(even) { background: #fdfbfe; }
+.admin-table tbody tr:hover { background: #faf3fc; box-shadow: inset 3px 0 0 #7d1598; }
 .admin-table tbody tr:last-child td { border-bottom: 0; }
 .admin-table td { color: #403747; font-size: .88rem; line-height: 1.45; }
 .admin-badge { padding: .38rem .68rem; border: 1px solid transparent; font-size: .72rem; letter-spacing: .01em; }
@@ -1633,9 +1633,13 @@ body .admin-header { margin-bottom: 2rem; }
 .dashboard-kpi-icon.purple,
 .dashboard-rate-badge { color: #560072; background: #f0dcf5; }
 .legend-dot.confirmed { background: #650083; }
+.legend-dot.pending { background: #ead3f0; }
+.capacity-track { background: #eadced; }
 .capacity-track span { background: linear-gradient(90deg, #560072, #a052ba); }
+.dashboard-mini-grid div { background: #fcf8ff; }
 .dashboard-mini-grid strong,
 .dashboard-action strong { color: #560072; }
+.dashboard-action { border-color: #eadced; }
 .dashboard-action > span { color: #560072; background: #f0dcf5; }
 .dashboard-action:hover { border-color: #b77ac8; background: #fcf8ff; }
 .admin-table tbody tr:hover { box-shadow: inset 3px 0 0 #7d1598; }
