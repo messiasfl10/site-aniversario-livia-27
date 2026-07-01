@@ -32,8 +32,8 @@ const messageField = document.querySelector('textarea[name="message"]');
 
 if (messageField) {
   messageField.placeholder = isCoupleInvite
-    ? "Se quiserem, deixem uma mensagem carinhosa para nós 💜"
-    : "Se quiser, deixe uma mensagem carinhosa para nós 💜";
+    ? "Se quiserem, deixem uma mensagem carinhosa para mim 💜"
+    : "Se quiser, deixe uma mensagem carinhosa para mim 💜";
 }
 
 const coupleMembersSection = document.getElementById("coupleMembersSection");
