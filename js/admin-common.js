@@ -37,16 +37,28 @@
     toggle.className = "admin-menu-toggle";
     toggle.type = "button";
     toggle.setAttribute("aria-label", "Abrir menu administrativo");
+    toggle.setAttribute("aria-expanded", "false");
     toggle.textContent = "☰";
     overlay.className = "admin-menu-overlay";
     overlay.type = "button";
     overlay.setAttribute("aria-label", "Fechar menu administrativo");
     document.body.append(toggle, overlay);
 
-    const setOpen = (open) => document.body.classList.toggle("admin-menu-open", open);
-    toggle.addEventListener("click", () => setOpen(true));
+    const setOpen = (open) => {
+      document.body.classList.toggle("admin-menu-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Fechar menu administrativo" : "Abrir menu administrativo");
+      toggle.textContent = open ? "×" : "☰";
+    };
+    toggle.addEventListener("click", () => setOpen(!document.body.classList.contains("admin-menu-open")));
     overlay.addEventListener("click", () => setOpen(false));
     nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setOpen(false)));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && document.body.classList.contains("admin-menu-open")) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
   }
 
   function setupLogout(buttonId = "logoutButton") {
