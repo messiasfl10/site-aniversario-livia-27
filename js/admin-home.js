@@ -59,7 +59,7 @@ async function loadDashboard() {
   const total = Math.max(guests.length, 1);
   const yesDeg = (yes / total) * 360;
   const noDeg = yesDeg + (no / total) * 360;
-  document.getElementById("responseDonut").style.background = `conic-gradient(#7c3aed 0deg ${yesDeg}deg, #f472b6 ${yesDeg}deg ${noDeg}deg, #e9d5ff ${noDeg}deg 360deg)`;
+  document.getElementById("responseDonut").style.background = `conic-gradient(#9333ea 0deg ${yesDeg}deg, #f472b6 ${yesDeg}deg ${noDeg}deg, #f3e8ff ${noDeg}deg 360deg)`;
 }
 
 loadDashboard();

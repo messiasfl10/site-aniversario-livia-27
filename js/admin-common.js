@@ -23,6 +23,13 @@
       <a class="admin-nav-site-link" href="./index.html" target="_blank" rel="noopener noreferrer">↗ Ver site</a>
     `;
 
+    const logoutButton = document.getElementById("logoutButton");
+    if (logoutButton) {
+      logoutButton.classList.add("admin-sidebar-logout");
+      logoutButton.textContent = "↪ Sair do painel";
+      nav.appendChild(logoutButton);
+    }
+
     const toggle = document.createElement("button");
     const overlay = document.createElement("button");
     toggle.className = "admin-menu-toggle";
