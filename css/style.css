@@ -1,11 +1,19 @@
 @import url("./tokens.css");
 
 /* Birthday visual identity */
-.birthday-site { background: #fbf8ff; }
+.birthday-site {
+  --color-primary: #560072;
+  --color-primary-light: #a052ba;
+  --color-primary-hover: #400055;
+  --color-primary-soft: rgba(86, 0, 114, .09);
+  --primary: #560072;
+  --primary-light: #a052ba;
+  background: #fcf8ff;
+}
 .birthday-site .logo { color: var(--color-inverse); text-decoration: none; }
 .birthday-hero {
   background:
-    linear-gradient(135deg, rgba(46, 16, 101, 0.82), rgba(109, 40, 217, 0.58)),
+    linear-gradient(135deg, rgba(49, 0, 65, 0.84), rgba(86, 0, 114, 0.6)),
     url("../assets/images/home/cover-main-page.jpg") center 35% / cover no-repeat;
   isolation: isolate;
   overflow: hidden;
@@ -17,21 +25,21 @@
 }
 .birthday-hero .hero-content h1 {
   color: var(--color-inverse);
-  text-shadow: 0 3px 18px rgba(23, 5, 47, 0.75);
+  text-shadow: 0 3px 18px rgba(40, 0, 52, 0.75);
 }
 .birthday-glow { position: absolute; border-radius: 50%; filter: blur(30px); opacity: .28; }
-.birthday-glow-one { width: 380px; height: 380px; background: #e9d5ff; left: -120px; top: 15%; }
-.birthday-glow-two { width: 320px; height: 320px; background: #c084fc; right: -90px; bottom: 8%; }
-.birthday-callout { background: linear-gradient(135deg, #f4e8ff, #fff 52%, #ede9fe); }
+.birthday-glow-one { width: 380px; height: 380px; background: #e8c9f2; left: -120px; top: 15%; }
+.birthday-glow-two { width: 320px; height: 320px; background: #b66bcc; right: -90px; bottom: 8%; }
+.birthday-callout { background: linear-gradient(135deg, #f5e8fa, #fff 52%, #eee1f4); }
 .birthday-details-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; }
 .birthday-detail-card {
   display: block; padding: 3rem 2rem; text-align: center; color: var(--color-text); text-decoration: none;
-  background: rgba(255,255,255,.9); border: 1px solid #e9d5ff; border-radius: 28px;
-  box-shadow: 0 18px 50px rgba(91,33,182,.1); transition: transform .25s ease, box-shadow .25s ease;
+  background: rgba(255,255,255,.9); border: 1px solid #e5cfea; border-radius: 28px;
+  box-shadow: 0 18px 50px rgba(86,0,114,.1); transition: transform .25s ease, box-shadow .25s ease;
 }
-.birthday-detail-card:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(91,33,182,.18); }
-.birthday-detail-card h3 { color: #4c1d95; font-family: var(--font-heading); font-size: 2rem; margin: .5rem 0 1rem; }
-.detail-icon { display: inline-grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; color: #fff; background: linear-gradient(135deg, #7c3aed, #a855f7); font-size: 1.35rem; }
+.birthday-detail-card:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(86,0,114,.18); }
+.birthday-detail-card h3 { color: #560072; font-family: var(--font-heading); font-size: 2rem; margin: .5rem 0 1rem; }
+.detail-icon { display: inline-grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; color: #fff; background: linear-gradient(135deg, #560072, #9a3fba); font-size: 1.35rem; }
 .countdown-finished { margin-top: 2rem; color: var(--color-primary); font-weight: 600; }
 @media (max-width: 760px) { .birthday-details-grid { grid-template-columns: 1fr; } .birthday-detail-card { padding: 2.25rem 1.25rem; } }
 
@@ -90,8 +98,8 @@ body {
   padding: 1.2rem 0;
   background: linear-gradient(
     to bottom,
-    rgba(24, 5, 49, 0.78) 0%,
-    rgba(24, 5, 49, 0.42) 65%,
+    rgba(40, 0, 52, 0.8) 0%,
+    rgba(40, 0, 52, 0.42) 65%,
     transparent 100%
   );
   transition: 0.4s ease;
@@ -143,7 +151,7 @@ body {
 }
 
 .nav-links a:hover {
-  color: #d9b3ff;
+  color: #ddb5eb;
 }
 
 .mobile-menu {
@@ -164,7 +172,7 @@ body {
   justify-content: center;
   text-align: center;
   background-image:
-    linear-gradient(135deg, rgba(46, 16, 101, 0.78), rgba(109, 40, 217, 0.5)),
+    linear-gradient(135deg, rgba(49, 0, 65, 0.8), rgba(86, 0, 114, 0.52)),
     url("../assets/images/home/cover-main-page.jpg");
   background-size: cover;
   background-position: center;
@@ -177,7 +185,7 @@ body {
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0.4),
-    rgba(70, 20, 120, 0.45)
+    rgba(86, 0, 114, 0.45)
   );
 }
 
@@ -193,7 +201,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5rem;
   margin-bottom: 1.5rem;
-  color: #ead7ff;
+  color: #edd8f5;
 }
 
 .hero h1 {
@@ -205,7 +213,7 @@ body {
 .hero-text {
   font-size: 1.3rem;
   line-height: 2rem;
-  color: #f3ebff;
+  color: #f9effd;
   margin-bottom: 2rem;
 }
 
@@ -227,12 +235,12 @@ body {
   border-radius: 999px;
   text-decoration: none;
   transition: 0.3s ease;
-  box-shadow: 0 10px 30px rgba(111, 63, 167, 0.4);
+  box-shadow: 0 10px 30px rgba(86, 0, 114, 0.4);
 }
 
 .hero-button:hover {
   transform: translateY(-4px);
-  background: #5b2e90;
+  background: #400055;
 }
 
 /* Countdown */
@@ -513,7 +521,7 @@ body {
 @media (max-width: 768px) {
   .birthday-hero {
     background-image:
-      linear-gradient(135deg, rgba(46, 16, 101, 0.78), rgba(109, 40, 217, 0.5)),
+      linear-gradient(135deg, rgba(49, 0, 65, 0.8), rgba(86, 0, 114, 0.52)),
       url("../assets/images/home/cover-main-page-vertical.jpg");
     background-position: center 28%;
     background-attachment: scroll;
