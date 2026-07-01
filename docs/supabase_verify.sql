@@ -10,4 +10,5 @@ select
   to_regclass('public.guest_access_sessions') is not null as sessions_ok,
   to_regclass('public.invite_login_attempts') is not null as rate_limit_ok,
   to_regprocedure('public.get_current_guest_profile()') is not null as profile_rpc_ok,
+  to_regprocedure('public.create_guest_with_invite(text,text,jsonb,integer)') is not null as secure_invite_rpc_ok,
   to_regprocedure('public.save_current_rsvp(text,text,jsonb,text,text,text)') is not null as rsvp_rpc_ok;

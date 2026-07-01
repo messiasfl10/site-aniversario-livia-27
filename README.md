@@ -21,6 +21,7 @@ O foco do site está nas informações da festa, no controle dos convites e no R
 - Proteção do login com Cloudflare Turnstile e limitação de tentativas.
 - Painel administrativo com dashboard, indicadores e atalhos.
 - Gerenciamento de convidados, códigos, limites e status dos convites.
+- Geração criptográfica dos códigos de convite diretamente no Supabase.
 - Consulta, filtragem, ordenação e exclusão de RSVPs.
 - Exportação de convidados e confirmações em CSV.
 - Layout responsivo para computadores e dispositivos móveis.
@@ -119,6 +120,7 @@ Abrir os arquivos diretamente com `file://` pode impedir alguns recursos de aute
 - Apenas a chave pública `anon` do Supabase deve ficar no navegador.
 - As permissões de acesso são protegidas por RLS e funções específicas do banco.
 - O código de convite é validado pela Edge Function, sem acesso direto a operações privilegiadas.
+- Novos códigos são gerados no banco por uma RPC restrita a administradores.
 
 ## Manutenção
 

@@ -597,10 +597,6 @@ function clearGuestFilters() {
   applyGuestFilters();
 }
 
-function generateInviteCode() {
-  return Math.random().toString(36).substring(2, 8).toUpperCase();
-}
-
 function openGuestModal() {
   editingGuest = null;
   guestModalTitle.textContent = "Novo Convidado";
@@ -936,19 +932,17 @@ guestForm.addEventListener("submit", async (event) => {
     max_guests: maxGuests,
   };
 
-  if (!editingGuest) {
-    payload.invite_code = generateInviteCode();
-    payload.confirmed = false;
-    payload.active = true;
-    payload.access_count = 0;
-  }
-
   const result = editingGuest
     ? await supabaseClient
         .from("guests")
         .update(payload)
         .eq("id", editingGuest.id)
-    : await supabaseClient.from("guests").insert([payload]);
+    : await supabaseClient.rpc("create_guest_with_invite", {
+        guest_name: name,
+        guest_invite_type: inviteType,
+        guest_couple_members: coupleMembers,
+        guest_max_guests: maxGuests,
+      });
 
   if (result.error) {
     console.error(result.error);
