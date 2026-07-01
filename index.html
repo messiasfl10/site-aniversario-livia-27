@@ -13,7 +13,7 @@
   <body class="birthday-site">
     <header class="navbar" id="navbar">
       <div class="container nav-content">
-        <a class="logo" href="#home">Livia</a>
+        <a class="logo" id="siteLogo" href="#home">Livia</a>
         <nav aria-label="Navegação principal">
           <ul class="nav-links" id="navLinks">
             <li><a href="#home">Início</a></li>
@@ -32,9 +32,9 @@
         <div class="birthday-glow birthday-glow-two"></div>
         <div class="hero-content fade-up">
           <p class="hero-subtitle">Você recebeu um convite especial</p>
-          <h1>Livia · 27 anos</h1>
+          <h1 id="heroTitle">Livia · 27 anos</h1>
           <p class="hero-text">Uma nova fase merece uma noite inesquecível com as pessoas favoritas dela.</p>
-          <div class="hero-date">08 de Agosto de 2026 · 18h</div>
+          <div class="hero-date" id="heroDate">08 de Agosto de 2026 · 18h</div>
           <a href="login.html?redirect=rsvp" class="hero-button">Confirmar presença</a>
         </div>
       </section>
@@ -56,7 +56,7 @@
       <section class="welcome-section birthday-callout reveal" id="celebration">
         <div class="container small-container">
           <p class="section-subtitle">Plot twist de aniversário</p>
-          <h2 class="section-title">O aniversário é dia 5, mas a missão de comemorar está marcada para dia 8.</h2>
+          <h2 class="section-title" id="birthdayCallout">O aniversário é dia 5, mas a missão de comemorar está marcada para dia 8.</h2>
           <p class="welcome-text">Porque uma data tão especial merece ganhar uma noite só dela — e você faz parte do grupo escolhido para deixar essa fase ainda mais bonita.</p>
         </div>
       </section>
@@ -66,14 +66,14 @@
           <article class="birthday-detail-card">
             <span class="detail-icon" aria-hidden="true">✦</span>
             <p class="section-subtitle">Quando</p>
-            <h3>Sábado, 8 de agosto</h3>
-            <p>A partir das 18h</p>
+            <h3 id="eventDateDetail">Sábado, 8 de agosto</h3>
+            <p id="eventTimeDetail">A partir das 18h</p>
           </article>
-          <a class="birthday-detail-card" href="https://www.google.com/maps/search/?api=1&amp;query=Geek%20Bunker%20Burger%2C%20Av.%20Jovita%20Feitosa%2C%202802%2C%20Fortaleza%2C%20CE" target="_blank" rel="noopener noreferrer">
+          <a class="birthday-detail-card" id="venueCard" href="https://www.google.com/maps/search/?api=1&amp;query=Geek%20Bunker%20Burger%2C%20Av.%20Jovita%20Feitosa%2C%202802%2C%20Fortaleza%2C%20CE" target="_blank" rel="noopener noreferrer">
             <span class="detail-icon" aria-hidden="true">⌖</span>
             <p class="section-subtitle">Onde</p>
-            <h3>Geek Bunker Burger</h3>
-            <p>Av. Jovita Feitosa, 2802 · Parquelândia<br />Fortaleza · CE, 60455-410</p>
+            <h3 id="venueName">Geek Bunker Burger</h3>
+            <p id="venueAddress">Av. Jovita Feitosa, 2802 · Parquelândia<br />Fortaleza · CE, 60455-410</p>
             <span class="event-map-hint">Abrir no Google Maps ↗</span>
           </a>
         </div>
@@ -83,18 +83,19 @@
         <div class="container small-container">
           <p class="section-subtitle">Sua presença é o melhor presente</p>
           <h2 class="section-title">Vai entrar nessa missão comigo?</h2>
-          <p class="welcome-text">Use o código do seu convite e confirme sua presença até <strong>1º de agosto de 2026</strong>.</p>
+          <p class="welcome-text">Use o código do seu convite e confirme sua presença até <strong id="rsvpDeadline">1º de agosto de 2026</strong>.</p>
           <a href="login.html?redirect=rsvp" class="hero-button">Acessar meu convite</a>
         </div>
       </section>
     </main>
 
     <footer class="footer">
-      <h3>Livia</h3>
-      <p>08 de Agosto de 2026 · Fortaleza, Ceará</p>
+      <h3 id="footerName">Livia</h3>
+      <p id="footerEvent">08 de Agosto de 2026 · Fortaleza, Ceará</p>
       <span>Feito com carinho para celebrar uma pessoa incrível.</span>
       <p class="site-credit">Desenvolvido por <a href="https://github.com/messiasfl10/" target="_blank" rel="noopener noreferrer">Messias D. P. de M. Filho</a></p>
     </footer>
+    <script src="js/event-config.js"></script>
     <script src="js/script.js"></script>
   </body>
 </html>

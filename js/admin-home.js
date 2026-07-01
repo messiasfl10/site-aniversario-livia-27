@@ -2,6 +2,10 @@ AdminCommon.setupLogout();
 
 const setText = AdminCommon.setText;
 
+const eventConfig = window.EventConfig;
+const adminEventDate = eventConfig.formatDate(eventConfig.celebration.date, { day: "numeric", month: "long" });
+setText("adminEventSummary", `Aniversário da ${eventConfig.celebrant.name} · ${adminEventDate}`);
+
 function plannedPeople(guest) {
   const primary = guest.invite_type === "couple"
     ? Math.max((guest.couple_members || []).length, 2)

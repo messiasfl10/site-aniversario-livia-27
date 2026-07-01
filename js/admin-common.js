@@ -4,6 +4,9 @@
     if (!nav) return;
 
     const page = window.location.pathname.split("/").pop() || "admin-dashboard.html";
+    const eventConfig = window.EventConfig;
+    const celebrantName = eventConfig?.celebrant.name || "Livia";
+    const celebratedAge = eventConfig?.getCelebratedAge() || 27;
     const items = [
       ["admin-dashboard.html", "⌂", "Visão geral"],
       ["admin-guests.html", "♙", "Convidados"],
@@ -12,7 +15,7 @@
 
     nav.innerHTML = `
       <a class="admin-nav-brand" href="./admin-dashboard.html">
-        <span>L</span><div><strong>Livia</strong><small>27 anos</small></div>
+        <span>${celebrantName.charAt(0)}</span><div><strong>${celebrantName}</strong><small>${celebratedAge} anos</small></div>
       </a>
       <div class="admin-nav-label">Organização</div>
       ${items.map(([href, icon, label]) => `
