@@ -712,9 +712,6 @@ function getAdminRSVPCompanions() {
       is_child:
         document.querySelector(`.admin-rsvp-companion-child[data-index="${i}"]`)
           ?.value || "Não",
-      age:
-        document.querySelector(`.admin-rsvp-companion-age[data-index="${i}"]`)
-          ?.value || "",
     });
   }
 
@@ -757,41 +754,9 @@ function renderAdminRSVPCompanionFields(companions = []) {
         </select>
       </div>
 
-      <div
-        class="admin-form-group admin-rsvp-companion-age-group ${
-          companion.is_child === "Sim" ? "" : "is-hidden"
-        }"
-        data-index="${i}"
-      >
-        <label>Idade da criança na data da festa</label>
-        <select
-          class="admin-rsvp-companion-age"
-          data-index="${i}"
-          ${companion.is_child === "Sim" ? "required" : ""}
-        >
-          ${ChildAgeOptions.renderOptions(companion.age)}
-        </select>
-        <small class="admin-field-help">
-          Considere a idade que a criança terá em 8 de agosto de 2026.
-        </small>
-      </div>
     `;
 
     adminRSVPGuestFields.appendChild(wrapper);
-
-    const childSelect = wrapper.querySelector(".admin-rsvp-companion-child");
-    const ageGroup = wrapper.querySelector(".admin-rsvp-companion-age-group");
-    const ageInput = wrapper.querySelector(".admin-rsvp-companion-age");
-
-    childSelect.addEventListener("change", () => {
-      const isChild = childSelect.value === "Sim";
-      ageGroup.style.display = isChild ? "block" : "none";
-      ageInput.required = isChild;
-
-      if (!isChild && ageInput) {
-        ageInput.value = "";
-      }
-    });
   }
 }
 

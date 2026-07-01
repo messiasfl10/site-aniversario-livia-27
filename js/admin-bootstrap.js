@@ -1,18 +1,15 @@
 (function () {
   const ADMIN_LOGIN_PAGE = "admin-login.html";
   const PAGE_SCRIPTS = {
-    "admin-dashboard.html": ["js/buffet-metrics.js", "js/admin-home.js"],
+    "admin-dashboard.html": ["js/admin-home.js"],
     "admin-guests.html": [
       "js/admin-export.js",
-      "js/child-age-options.js",
       "js/admin-guests.js",
     ],
     "admin-rsvps.html": [
       "js/admin-export.js",
-      "js/buffet-metrics.js",
       "js/admin-rsvps.js",
     ],
-    "admin-settings.html": ["js/admin-settings.js"],
   };
 
   function getCurrentPage() {

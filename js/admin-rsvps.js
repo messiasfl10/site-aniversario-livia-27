@@ -4,7 +4,6 @@ const rsvpsTableBody = document.getElementById("rsvpsTableBody");
 const rsvpSearchInput = document.getElementById("rsvpSearchInput");
 const rsvpPresenceFilter = document.getElementById("rsvpPresenceFilter");
 const rsvpCompanionFilter = document.getElementById("rsvpCompanionFilter");
-const rsvpBuffetFilter = document.getElementById("rsvpBuffetFilter");
 const rsvpFilterCount = document.getElementById("rsvpFilterCount");
 const exportRSVPsButton = document.getElementById("exportRSVPsButton");
 const clearRSVPFiltersButton = document.getElementById(
@@ -15,7 +14,6 @@ const showAdminToast = AdminCommon.showToast;
 let cachedRSVPs = [];
 let cachedRSVPGuests = [];
 let visibleRSVPs = [];
-let buffetPayingAge = BuffetMetrics.DEFAULT_PAYING_AGE;
 let rsvpSortState = {
   key: "updated",
   direction: "desc",
@@ -39,7 +37,6 @@ function applyRSVPFiltersFromUrl() {
   setFilterValueFromParam(rsvpSearchInput, params, "search");
   setFilterValueFromParam(rsvpPresenceFilter, params, "presence");
   setFilterValueFromParam(rsvpCompanionFilter, params, "companions");
-  setFilterValueFromParam(rsvpBuffetFilter, params, "buffet");
 }
 
 function normalizeText(value) {
@@ -106,17 +103,9 @@ function renderCompanionDetails(rsvp) {
     <div class="companion-details">
       ${companions
         .map((companion) => {
-          const childInfo =
-            companion.is_child === "Sim"
-              ? ` <span class="child-info">Criança${
-                  companion.age ? ` · ${companion.age}` : ""
-                } · ${BuffetMetrics.getCategoryLabel(
-                  BuffetMetrics.classifyChild(
-                    companion.age,
-                    buffetPayingAge,
-                  ),
-                )}</span>`
-              : "";
+          const childInfo = companion.is_child === "Sim"
+            ? ` <span class="child-info">Criança</span>`
+            : "";
 
           return `
             <div>
@@ -156,7 +145,7 @@ function formatRSVPCompanions(rsvp) {
     .map((companion) => {
       const childInfo =
         companion.is_child === "Sim"
-          ? `criança${companion.age ? `, ${companion.age}` : ""}`
+          ? "criança"
           : "adulto";
 
       return `${companion.name || "Sem nome"} (${childInfo})`;
@@ -182,14 +171,8 @@ async function loadRSVPsAdmin() {
     .from("rsvps")
     .select("*");
 
-  const { data: settings, error: settingsError } = await supabaseClient
-    .from("settings")
-    .select("buffet_paying_age")
-    .limit(1)
-    .maybeSingle();
-
-  if (guestsError || rsvpsError || settingsError) {
-    console.error(guestsError || rsvpsError || settingsError);
+  if (guestsError || rsvpsError) {
+    console.error(guestsError || rsvpsError);
     showAdminToast("⚠️ Erro ao carregar confirmações.");
     return;
   }
@@ -202,9 +185,6 @@ async function loadRSVPsAdmin() {
 
   cachedRSVPs = activeRSVPs;
   cachedRSVPGuests = activeGuests;
-  buffetPayingAge = BuffetMetrics.normalizePayingAge(
-    settings?.buffet_paying_age,
-  );
   applyRSVPFilters();
 }
 
@@ -265,15 +245,9 @@ function renderRSVPTable(rsvps, guests) {
 
 function applyRSVPFilters() {
   const guestMap = getRSVPGuestMap();
-  const guestRecordMap = cachedRSVPGuests.reduce((map, guest) => {
-    map[guest.id] = guest;
-    return map;
-  }, {});
-
   const search = normalizeText(rsvpSearchInput?.value);
   const presence = rsvpPresenceFilter?.value || "";
   const companionFilter = rsvpCompanionFilter?.value || "";
-  const buffetFilter = rsvpBuffetFilter?.value || "";
 
   const filteredRSVPs = cachedRSVPs.filter((rsvp) => {
     const guestName =
@@ -283,11 +257,6 @@ function applyRSVPFilters() {
     const companions = rsvp.guest_data?.companions || [];
     const members = rsvp.guest_data?.members || [];
     const companionCount = Number(rsvp.guest_data?.guest_count || 0);
-    const buffetMetrics = BuffetMetrics.getRSVPMetrics(
-      guestRecordMap[rsvp.guest_id],
-      rsvp,
-      buffetPayingAge,
-    );
 
     const searchable = normalizeText(
       [
@@ -306,23 +275,7 @@ function applyRSVPFilters() {
       (companionFilter === "with"
         ? companionCount > 0
         : companionCount === 0);
-    const matchesBuffet =
-      !buffetFilter ||
-      (buffetFilter === "paying" && buffetMetrics.payingPeople > 0) ||
-      (buffetFilter === "children" && buffetMetrics.children > 0) ||
-      (buffetFilter === "child-paying" &&
-        buffetMetrics.payingChildren > 0) ||
-      (buffetFilter === "child-non-paying" &&
-        buffetMetrics.nonPayingChildren > 0) ||
-      (buffetFilter === "child-unknown" &&
-        buffetMetrics.unknownAgeChildren > 0);
-
-    return (
-      matchesSearch &&
-      matchesPresence &&
-      matchesCompanions &&
-      matchesBuffet
-    );
+    return matchesSearch && matchesPresence && matchesCompanions;
   });
 
   const sortedRSVPs = sortRSVPs(filteredRSVPs, guestMap);
@@ -405,16 +358,8 @@ function exportRSVPsCSV() {
   }
 
   const guestMap = getRSVPGuestMap();
-  const guestRecordMap = cachedRSVPGuests.reduce((map, guest) => {
-    map[guest.id] = guest;
-    return map;
-  }, {});
-  const getMetrics = (rsvp) =>
-    BuffetMetrics.getRSVPMetrics(
-      guestRecordMap[rsvp.guest_id],
-      rsvp,
-      buffetPayingAge,
-    );
+  const getChildren = (rsvp) => (rsvp.guest_data?.companions || [])
+    .filter((companion) => companion.is_child === "Sim").length;
 
   AdminExport.downloadCSV("rsvps", [
     { label: "Convidado", value: (rsvp) => getRSVPGuestName(rsvp, guestMap) },
@@ -426,28 +371,8 @@ function exportRSVPsCSV() {
     },
     { label: "Acompanhantes", value: formatRSVPCompanions },
     {
-      label: "Total de Pessoas",
-      value: (rsvp) => getMetrics(rsvp).totalPeople,
-    },
-    {
-      label: "Convidados Pagantes",
-      value: (rsvp) => getMetrics(rsvp).payingPeople,
-    },
-    {
       label: "Total de Crianças",
-      value: (rsvp) => getMetrics(rsvp).children,
-    },
-    {
-      label: "Crianças Pagantes",
-      value: (rsvp) => getMetrics(rsvp).payingChildren,
-    },
-    {
-      label: "Crianças Não Pagantes",
-      value: (rsvp) => getMetrics(rsvp).nonPayingChildren,
-    },
-    {
-      label: "Crianças Sem Idade",
-      value: (rsvp) => getMetrics(rsvp).unknownAgeChildren,
+      value: getChildren,
     },
     { label: "Restrição Alimentar", value: "food" },
     { label: "Mensagem", value: "message" },
@@ -468,7 +393,6 @@ function clearRSVPFilters() {
   [
     rsvpPresenceFilter,
     rsvpCompanionFilter,
-    rsvpBuffetFilter,
   ].forEach((filter) => {
     if (filter) {
       filter.value = "";
@@ -508,7 +432,6 @@ window.deleteRSVPFromTable = async function (rsvpId, guestId) {
   rsvpSearchInput,
   rsvpPresenceFilter,
   rsvpCompanionFilter,
-  rsvpBuffetFilter,
 ].forEach((filter) => {
   filter?.addEventListener("input", applyRSVPFilters);
   filter?.addEventListener("change", applyRSVPFilters);

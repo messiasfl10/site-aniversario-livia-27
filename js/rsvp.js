@@ -132,51 +132,12 @@ guestCount.addEventListener("change", () => {
         </select>
       </div>
 
-      <div
-        class="form-group child-age is-hidden"
-        id="childAge_${i}"
-      >
-        <label>
-          Idade da criança na data da festa
-        </label>
-
-        <select
-          class="child-age-select"
-          name="guest_age_${i}"
-        >
-          ${ChildAgeOptions.renderOptions()}
-        </select>
-
-        <small class="field-help">
-          Considere a idade que a criança terá em 8 de agosto de 2026.
-        </small>
-      </div>
     `;
 
     guestFields.appendChild(wrapper);
   }
 
-  activateChildLogic();
 });
-
-function activateChildLogic() {
-  document.querySelectorAll(".child-select").forEach((select) => {
-    select.addEventListener("change", () => {
-      const index = select.dataset.index;
-
-      const ageField = document.getElementById(`childAge_${index}`);
-      const ageSelect = ageField.querySelector(".child-age-select");
-      const isChild = select.value === "Sim";
-
-      ageField.style.display = isChild ? "block" : "none";
-      ageSelect.required = isChild;
-
-      if (!isChild) {
-        ageSelect.value = "";
-      }
-    });
-  });
-}
 
 /* =========================
    Companion Cache
@@ -196,7 +157,6 @@ function getCurrentCompanionsFromForm() {
         document.querySelector(`select[name="guest_child_${i}"]`)?.value ||
         "Não",
 
-      age: document.querySelector(`select[name="guest_age_${i}"]`)?.value || "",
     });
   }
 
@@ -221,15 +181,6 @@ function restoreCompanions(companions) {
     document.querySelector(`select[name="guest_child_${i}"]`).value =
       companion.is_child || "Não";
 
-    if (companion.is_child === "Sim") {
-      document.getElementById(`childAge_${i}`).style.display = "block";
-
-      const ageSelect = document.querySelector(
-        `select[name="guest_age_${i}"]`,
-      );
-      ageSelect.innerHTML = ChildAgeOptions.renderOptions(companion.age);
-      ageSelect.required = true;
-    }
   });
 }
 
@@ -497,7 +448,6 @@ form.addEventListener("submit", async (e) => {
 
         is_child: data[`guest_child_${i}`] || "Não",
 
-        age: data[`guest_age_${i}`] || "",
       });
     }
 

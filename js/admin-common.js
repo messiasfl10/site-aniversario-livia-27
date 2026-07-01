@@ -8,7 +8,6 @@
       ["admin-dashboard.html", "⌂", "Visão geral"],
       ["admin-guests.html", "♙", "Convidados"],
       ["admin-rsvps.html", "✓", "Confirmações"],
-      ["admin-settings.html", "⚙", "Configurações"],
     ];
 
     nav.innerHTML = `

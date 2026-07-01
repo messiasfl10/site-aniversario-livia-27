@@ -4,7 +4,6 @@
     "admin-dashboard.html",
     "admin-guests.html",
     "admin-rsvps.html",
-    "admin-settings.html",
   ]);
 
   const form = document.getElementById("adminLoginForm");

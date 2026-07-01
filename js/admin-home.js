@@ -10,13 +10,12 @@ function plannedPeople(guest) {
 }
 
 async function loadDashboard() {
-  const [guestResult, rsvpResult, settingsResult] = await Promise.all([
+  const [guestResult, rsvpResult] = await Promise.all([
     supabaseClient.from("guests").select("*").eq("active", true),
     supabaseClient.from("rsvps").select("*"),
-    supabaseClient.from("settings").select("buffet_paying_age").limit(1).maybeSingle(),
   ]);
 
-  const error = guestResult.error || rsvpResult.error || settingsResult.error;
+  const error = guestResult.error || rsvpResult.error;
   if (error) {
     console.error(error);
     AdminCommon.showToast("⚠️ Não foi possível carregar a visão geral.");
@@ -32,13 +31,21 @@ async function loadDashboard() {
   const responses = yes + no;
   const rate = guests.length ? Math.round((responses / guests.length) * 100) : 0;
   const capacity = guests.reduce((sum, guest) => sum + plannedPeople(guest), 0);
-  const payingAge = settingsResult.data?.buffet_paying_age || BuffetMetrics.DEFAULT_PAYING_AGE;
-  const attendance = BuffetMetrics.getAttendanceMetrics(guests, rsvps, payingAge);
+  const attendingRSVPs = rsvps.filter((rsvp) => rsvp.presence === "Sim");
+  const totalPeople = attendingRSVPs.reduce((sum, rsvp) => {
+    const guest = guests.find((item) => item.id === rsvp.guest_id);
+    const members = guest?.invite_type === "couple"
+      ? (rsvp.guest_data?.members || []).filter((member) => member.presence === "Sim").length
+      : 1;
+    return sum + members + (rsvp.guest_data?.companions || []).length;
+  }, 0);
+  const children = attendingRSVPs.reduce((sum, rsvp) =>
+    sum + (rsvp.guest_data?.companions || []).filter((companion) => companion.is_child === "Sim").length, 0);
   const companions = rsvps.reduce((sum, rsvp) => sum + (rsvp.presence === "Sim" ? (rsvp.guest_data?.companions || []).length : 0), 0);
-  const occupancy = capacity ? Math.min(Math.round((attendance.totalPeople / capacity) * 100), 100) : 0;
+  const occupancy = capacity ? Math.min(Math.round((totalPeople / capacity) * 100), 100) : 0;
 
   setText("activeInvites", guests.length);
-  setText("confirmedPeople", attendance.totalPeople);
+  setText("confirmedPeople", totalPeople);
   setText("pendingInvites", pending);
   setText("declinedInvites", no);
   setText("yesInvites", yes);
@@ -46,13 +53,13 @@ async function loadDashboard() {
   setText("pendingLegend", pending);
   setText("responseTotal", responses);
   setText("responseRateBadge", `${rate}% responderam`);
-  setText("capacityConfirmed", attendance.totalPeople);
+  setText("capacityConfirmed", totalPeople);
   setText("capacityTotal", capacity);
-  setText("childrenCount", attendance.children);
-  setText("payingCount", attendance.payingPeople);
+  setText("childrenCount", children);
+  setText("adultsCount", Math.max(totalPeople - children, 0));
   setText("companionsCount", companions);
-  setText("invitePeopleHint", `${capacity} pessoas no limite planejado`);
-  setText("payingPeopleHint", `${attendance.payingPeople} pagantes para o buffet`);
+  setText("invitePeopleHint", `${capacity} pessoas planejadas no total`);
+  setText("confirmedPeopleHint", `${children} criança${children === 1 ? "" : "s"} confirmada${children === 1 ? "" : "s"}`);
   setText("capacityCaption", occupancy ? `${occupancy}% da capacidade planejada já confirmada` : "Ainda não há presenças confirmadas");
 
   document.getElementById("capacityBar").style.width = `${occupancy}%`;

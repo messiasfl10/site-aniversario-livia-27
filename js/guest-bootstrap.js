@@ -1,6 +1,6 @@
 (function () {
   const PAGE_SCRIPTS = {
-    "rsvp.html": ["js/child-age-options.js", "js/rsvp.js"],
+    "rsvp.html": ["js/rsvp.js"],
   };
 
   function getCurrentPage() {

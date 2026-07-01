@@ -6,7 +6,6 @@ select policyname from pg_policies where schemaname='public' and (tablename ilik
 select
   to_regclass('public.guests') is not null as guests_ok,
   to_regclass('public.rsvps') is not null as rsvps_ok,
-  to_regclass('public.settings') is not null as settings_ok,
   to_regclass('public.admin_users') is not null as admins_ok,
   to_regclass('public.guest_access_sessions') is not null as sessions_ok,
   to_regclass('public.invite_login_attempts') is not null as rate_limit_ok,

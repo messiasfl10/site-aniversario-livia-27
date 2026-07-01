@@ -34,9 +34,5 @@
     return result;
   }
 
-  async function loadSettings() {
-    return supabaseClient.from("settings").select("buffet_paying_age").limit(1).maybeSingle();
-  }
-
-  window.GuestData = { loadRSVP, loadSettings, markGuestConfirmed, saveRSVP };
+  window.GuestData = { loadRSVP, markGuestConfirmed, saveRSVP };
 })();

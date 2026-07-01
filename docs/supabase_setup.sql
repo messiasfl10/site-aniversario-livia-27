@@ -29,11 +29,6 @@ create table if not exists public.rsvps (
   phone text
 );
 
-create table if not exists public.settings (
-  id uuid primary key default gen_random_uuid(),
-  buffet_paying_age integer not null default 7 check (buffet_paying_age between 1 and 18)
-);
-
 create table if not exists public.admin_users (
   user_id uuid primary key references auth.users(id) on delete cascade,
   active boolean not null default true,
@@ -57,9 +52,6 @@ create table if not exists public.invite_login_attempts (
 );
 create index if not exists invite_attempts_user_time_idx on public.invite_login_attempts(user_id, attempted_at desc);
 create index if not exists invite_attempts_network_time_idx on public.invite_login_attempts(network_hash, attempted_at desc);
-
-insert into public.settings (buffet_paying_age)
-select 7 where not exists (select 1 from public.settings);
 
 create or replace function public.is_admin()
 returns boolean language sql stable security definer set search_path = public
@@ -100,7 +92,6 @@ end; $$;
 
 alter table public.guests enable row level security;
 alter table public.rsvps enable row level security;
-alter table public.settings enable row level security;
 alter table public.admin_users enable row level security;
 alter table public.guest_access_sessions enable row level security;
 alter table public.invite_login_attempts enable row level security;
@@ -111,15 +102,10 @@ drop policy if exists rsvps_admin_all on public.rsvps;
 create policy rsvps_admin_all on public.rsvps for all to authenticated using(public.is_admin()) with check(public.is_admin());
 drop policy if exists rsvps_guest_select on public.rsvps;
 create policy rsvps_guest_select on public.rsvps for select to authenticated using(guest_id = public.current_guest_id());
-drop policy if exists settings_authenticated_select on public.settings;
-create policy settings_authenticated_select on public.settings for select to authenticated using(true);
-drop policy if exists settings_admin_write on public.settings;
-create policy settings_admin_write on public.settings for all to authenticated using(public.is_admin()) with check(public.is_admin());
 
 revoke all on all tables in schema public from anon;
 revoke all on public.guests,public.rsvps,public.admin_users,public.guest_access_sessions,public.invite_login_attempts from authenticated;
 grant select,insert,update,delete on public.guests,public.rsvps to authenticated;
-grant select,insert,update on public.settings to authenticated;
 revoke all on function public.register_guest_access(uuid) from public,anon,authenticated;
 grant execute on function public.register_guest_access(uuid) to service_role;
 grant execute on function public.is_admin(),public.current_guest_id(),public.get_current_guest_profile(),public.save_current_rsvp(text,text,jsonb,text,text,text) to authenticated;
