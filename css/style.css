@@ -243,6 +243,55 @@ body {
   background: #400055;
 }
 
+.hero-scroll-indicator {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.25rem, 4vh, 2.5rem);
+  z-index: 3;
+  display: grid;
+  justify-items: center;
+  gap: .3rem;
+  color: rgba(255, 255, 255, .88);
+  text-decoration: none;
+  transform: translateX(-50%);
+}
+
+.hero-scroll-indicator > span:first-child {
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.hero-scroll-arrow {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, .42);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .09);
+  backdrop-filter: blur(8px);
+  padding-bottom: .08rem;
+  font-size: 1.15rem;
+  line-height: 1;
+  animation: hero-scroll-bounce 1.8s ease-in-out infinite;
+}
+
+.hero-scroll-indicator:hover .hero-scroll-arrow,
+.hero-scroll-indicator:focus-visible .hero-scroll-arrow {
+  background: rgba(255, 255, 255, .2);
+}
+
+@keyframes hero-scroll-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(7px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-arrow { animation: none; }
+}
+
 /* Countdown */
 .countdown-section {
   padding: 8rem 0;
@@ -525,6 +574,19 @@ body {
       url("../assets/images/home/cover-main-page-vertical.jpg");
     background-position: center 28%;
     background-attachment: scroll;
+  }
+
+  .hero-scroll-indicator {
+    bottom: max(.8rem, env(safe-area-inset-bottom));
+  }
+
+  .hero-scroll-indicator > span:first-child {
+    font-size: .58rem;
+  }
+
+  .hero-scroll-arrow {
+    width: 32px;
+    height: 32px;
   }
 
   .nav-links {
