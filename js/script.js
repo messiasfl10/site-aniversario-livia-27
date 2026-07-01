@@ -33,10 +33,10 @@ function applyEventContent() {
   const deadline = eventConfig.formatDate(celebration.rsvpDeadline, { day: "numeric", month: "long", year: "numeric" });
   const formattedTime = celebration.time.replace(":00", "h");
 
-  document.title = `Aniversário da ${celebrant.name}`;
+  document.title = `Aniversário da ${celebrant.name} - ${age} Anos`;
   document.querySelector('meta[name="description"]')?.setAttribute("content", `Aniversário de ${celebrant.name} — ${eventDateLong}, no ${venue.name}.`);
   setText("siteLogo", celebrant.name);
-  setText("heroTitle", `${celebrant.name} · ${age} anos`);
+  setText("heroTitle", `${celebrant.name} · ${age} Anos`);
   setText("heroDate", `${eventDateLong} · ${formattedTime}`);
   setText("birthdayCallout", `O aniversário é dia ${birthdayDay}, mas a missão de comemorar está marcada para dia ${celebrationDay}.`);
   setText("eventDateDetail", eventDateDetail.charAt(0).toUpperCase() + eventDateDetail.slice(1));
