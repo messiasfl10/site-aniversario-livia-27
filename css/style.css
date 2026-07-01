@@ -163,7 +163,9 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  background-image: url("../assets/images/home/cover-main-page.jpg");
+  background-image:
+    linear-gradient(135deg, rgba(46, 16, 101, 0.78), rgba(109, 40, 217, 0.5)),
+    url("../assets/images/home/cover-main-page.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -509,6 +511,14 @@ body {
 }
 
 @media (max-width: 768px) {
+  .birthday-hero {
+    background-image:
+      linear-gradient(135deg, rgba(46, 16, 101, 0.78), rgba(109, 40, 217, 0.5)),
+      url("../assets/images/home/cover-main-page-vertical.jpg");
+    background-position: center 28%;
+    background-attachment: scroll;
+  }
+
   .nav-links {
     position: fixed;
     top: 80px;

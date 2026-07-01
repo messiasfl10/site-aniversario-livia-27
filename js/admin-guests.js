@@ -15,7 +15,6 @@ const guestSearchInput = document.getElementById("guestSearchInput");
 const guestStatusFilter = document.getElementById("guestStatusFilter");
 const guestConfirmedFilter = document.getElementById("guestConfirmedFilter");
 const guestTypeFilter = document.getElementById("guestTypeFilter");
-const guestAdminFilter = document.getElementById("guestAdminFilter");
 const guestFilterCount = document.getElementById("guestFilterCount");
 const exportGuestsButton = document.getElementById("exportGuestsButton");
 const clearGuestFiltersButton = document.getElementById(
@@ -81,7 +80,6 @@ function applyGuestFiltersFromUrl() {
   setFilterValueFromParam(guestStatusFilter, params, "status");
   setFilterValueFromParam(guestConfirmedFilter, params, "confirmed");
   setFilterValueFromParam(guestTypeFilter, params, "type");
-  setFilterValueFromParam(guestAdminFilter, params, "admin");
 }
 
 function normalizeText(value) {
@@ -442,7 +440,6 @@ function applyGuestFilters() {
   const status = guestStatusFilter?.value || "";
   const confirmed = guestConfirmedFilter?.value || "";
   const type = guestTypeFilter?.value || "";
-  const admin = guestAdminFilter?.value || "";
 
   const filteredGuests = cachedGuests.filter((guest) => {
     const searchable = normalizeText(
@@ -461,15 +458,11 @@ function applyGuestFilters() {
       !confirmed ||
       (confirmed === "confirmed" ? guest.confirmed : !guest.confirmed);
     const matchesType = !type || guest.invite_type === type;
-    const matchesAdmin =
-      !admin || (admin === "admin" ? guest.is_admin : !guest.is_admin);
-
     return (
       matchesSearch &&
       matchesStatus &&
       matchesConfirmed &&
-      matchesType &&
-      matchesAdmin
+      matchesType
     );
   });
 
@@ -507,7 +500,6 @@ function exportGuestsCSV() {
     },
     { label: "RSVP confirmado", value: (guest) => formatBoolean(guest.confirmed) },
     { label: "Ativo", value: (guest) => formatBoolean(guest.active) },
-    { label: "Administrador", value: (guest) => formatBoolean(guest.is_admin) },
     { label: "Codigo", value: "invite_code" },
     { label: "Ultimo acesso", value: (guest) => formatDate(guest.last_access) },
     { label: "Acessos", value: (guest) => Number(guest.access_count || 0) },
@@ -531,7 +523,6 @@ function exportGuestsCSV() {
 function getGuestSortValue(guest) {
   const sortValues = {
     accesses: Number(guest.access_count || 0),
-    admin: guest.is_admin ? 1 : 0,
     code: guest.invite_code,
     companions: Number(guest.max_guests || 0),
     confirmed: guest.confirmed ? 1 : 0,
@@ -597,7 +588,6 @@ function clearGuestFilters() {
     guestStatusFilter,
     guestConfirmedFilter,
     guestTypeFilter,
-    guestAdminFilter,
   ].forEach((filter) => {
     if (filter) {
       filter.value = "";
@@ -1150,7 +1140,6 @@ closeAdminRSVPModalButton.addEventListener("click", closeAdminRSVPModal);
   guestStatusFilter,
   guestConfirmedFilter,
   guestTypeFilter,
-  guestAdminFilter,
 ].forEach((filter) => {
   filter?.addEventListener("input", applyGuestFilters);
   filter?.addEventListener("change", applyGuestFilters);
