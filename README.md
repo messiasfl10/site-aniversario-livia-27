@@ -14,6 +14,7 @@ O foco do site está nas informações da festa, no controle dos convites e no R
 - Dados do evento centralizados em um único arquivo de configuração.
 - Acesso privado por código de convite.
 - Convites individuais e para casais.
+- Geração de mensagem personalizada para envio do convite por WhatsApp, Instagram ou outro canal.
 - Controle da quantidade máxima de acompanhantes.
 - Identificação de acompanhantes como criança ou não criança, sem classificação por idade.
 - Confirmação ou recusa de presença.
@@ -26,6 +27,7 @@ O foco do site está nas informações da festa, no controle dos convites e no R
 - Criação, edição e exclusão de RSVPs por operações transacionais no banco.
 - Consulta, filtragem, ordenação e exclusão de RSVPs.
 - Exportação de convidados e confirmações em CSV.
+- CSP configurada nas páginas públicas e administrativas, sem `unsafe-inline` para scripts.
 - Layout responsivo para computadores e dispositivos móveis.
 
 ## Tecnologias
@@ -53,6 +55,23 @@ O projeto não depende de framework frontend nem de etapa de compilação.
 | `admin-dashboard.html` | Visão geral e indicadores do evento |
 | `admin-guests.html` | Gerenciamento dos convidados |
 | `admin-rsvps.html` | Gerenciamento das confirmações |
+
+## Envio de convites
+
+No painel administrativo, a página `admin-guests.html` permite gerar uma mensagem pronta para cada convidado.
+
+A mensagem inclui:
+
+- Saudação personalizada com o nome do convite.
+- Texto em primeira pessoa para a aniversariante.
+- Variação automática entre convite individual e convite de casal.
+- Data, horário e local da festa.
+- Link direto para o site principal.
+- Código de convite.
+- Instruções curtas para acessar o site, tocar em **Confirmar presença**, informar o código e preencher o RSVP.
+- Prazo limite de confirmação.
+
+O texto pode ser revisado no modal antes de copiar e colar no WhatsApp, Instagram ou em qualquer outro canal de envio.
 
 ## Configuração central do evento
 
@@ -124,6 +143,17 @@ Abrir os arquivos diretamente com `file://` pode impedir alguns recursos de aute
 - O código de convite é validado pela Edge Function, sem acesso direto a operações privilegiadas.
 - Novos códigos são gerados no banco por uma RPC restrita a administradores.
 - O frontend possui apenas leitura direta das tabelas; as mutações passam por RPCs protegidas.
+- Dados dinâmicos exibidos no frontend devem ser inseridos com `textContent` ou propriedades DOM, evitando interpolação direta em HTML.
+- Eventos de interface devem usar `addEventListener`; não use `onclick` embutido em HTML estático ou gerado.
+- URLs dinâmicas devem ser validadas antes de serem aplicadas em `href` ou `src`.
+- Templates HTML só devem ser mantidos para conteúdo estático ou com escape centralizado.
+- As páginas possuem CSP por `<meta http-equiv="Content-Security-Policy">`, adequada para hospedagem estática no GitHub Pages. Em um ambiente com controle de servidor, prefira enviar a CSP como header HTTP.
+
+## Releases
+
+As mudanças relevantes ficam registradas em [`CHANGELOG.md`](CHANGELOG.md).
+
+Release atual documentada: **v1.1**.
 
 ## Manutenção
 
@@ -134,6 +164,12 @@ Alterações na estrutura do banco devem ser refletidas em:
 - `docs/supabase_setup.sql`
 - `docs/supabase_verify.sql`
 - `docs/rebuild_runbook.md`
+
+Alterações visíveis para convidados ou administradores devem atualizar também:
+
+- `README.md`
+- `CHANGELOG.md`
+- Documentos específicos em `docs/`, quando houver impacto de configuração, segurança ou reconstrução.
 
 ## Desenvolvedor
 

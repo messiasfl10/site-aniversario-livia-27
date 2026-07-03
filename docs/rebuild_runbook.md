@@ -43,6 +43,23 @@ supabase secrets list
 
 8. Configure o Turnstile conforme `docs/turnstile_setup.md`.
 9. Cadastre convites no painel. Para casal, use `invite_type = couple`; para individual, `individual`.
-10. Teste: admin, convite inválido, individual, casal, RSVP Sim/Não, edição do RSVP e logout.
+10. Gere a mensagem de convite no painel de convidados e confira se ela mostra:
+    - tratamento correto para individual ou casal;
+    - link direto para o site principal;
+    - código de convite correto;
+    - instruções de confirmação e prazo de RSVP.
+11. Teste: admin, convite inválido, individual, casal, RSVP Sim/Não, edição do RSVP, geração/cópia da mensagem de convite e logout.
+
+## Checklist de segurança do frontend
+
+Antes de publicar uma nova versão, valide:
+
+- Não há handlers inline como `onclick` em HTML estático ou gerado por JavaScript.
+- Dados dinâmicos vindos do banco, formulário ou URL são renderizados com `textContent` ou propriedades DOM.
+- Elementos dinâmicos são criados com `document.createElement` sempre que possível.
+- URLs dinâmicas são validadas antes de serem aplicadas em `href` ou `src`.
+- A CSP das páginas continua sem `unsafe-inline` em `script-src`.
+- `node --check` passa nos JavaScripts alterados.
+- `git diff --check` não aponta erros.
 
 Não existem migrações de presentes, PIX ou Nossa História neste projeto.
