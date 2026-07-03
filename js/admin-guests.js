@@ -485,8 +485,8 @@ function buildInviteMessage(guest) {
   const { celebration, venue } = EventConfig;
   const isCouple = guest.invite_type === "couple";
   const invitationText = isCouple
-    ? "Vocês estão convidados(as)"
-    : "Você está convidado(a)";
+    ? "vocês estão sendo convidados(as)"
+    : "você está sendo convidado(a)";
   const confirmationInstruction = isCouple
     ? "acessem o site, toquem em “Confirmar presença”, informem o código de convite e preencham a confirmação"
     : "acesse o site, toque em “Confirmar presença”, informe o código de convite e preencha a confirmação";
@@ -504,7 +504,7 @@ function buildInviteMessage(guest) {
     month: "long",
   });
 
-  return `Oi, ${guest.name}! 💜\n\n${invitationText} para comemorar o meu aniversário! 🎉\n\n📅 ${eventDate}, às ${formatInviteTime(celebration.time)}\n📍 ${venue.name} — ${venue.address}, ${venue.city}/${venue.state}\n\nPara acessar o convite e confirmar a presença, ${accessInstruction} em:\n${getInvitationSiteUrl()}\n\n${codeInstruction} o código de convite: ${guest.invite_code}\n\nÉ bem rapidinho: ${confirmationInstruction}. Peço que ${confirmationRequest} até ${deadline}.\n\n${closingText}! ✨💜`;
+  return `Oooi, ${guest.name}! Tudo bem? 💜\n\nMeu aniversário está chegando! E ${invitationText} para comemorar este dia especial comigo! 🎉\n\n📅 ${eventDate}, às ${formatInviteTime(celebration.time)}\n📍 ${venue.name} — ${venue.address}, ${venue.city}/${venue.state}\n\nPara acessar o convite e confirmar a presença, ${accessInstruction} em:\n${getInvitationSiteUrl()}\n\n${codeInstruction} o código de convite: ${guest.invite_code}\n\nÉ bem rapidinho: ${confirmationInstruction}. Peço que ${confirmationRequest} até ${deadline}.\n\n${closingText}! ✨💜`;
 }
 
 window.openInviteMessageModal = function (guest) {
