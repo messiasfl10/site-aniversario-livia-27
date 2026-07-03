@@ -409,20 +409,15 @@ window.deleteRSVPFromTable = async function (rsvpId, guestId) {
     return;
   }
 
-  const { error } = await supabaseClient.from("rsvps").delete().eq("id", rsvpId);
+  const { error } = await supabaseClient.rpc("delete_admin_rsvp", {
+    target_rsvp_id: rsvpId,
+  });
 
   if (error) {
     console.error(error);
     showAdminToast("⚠️ Erro ao remover RSVP.");
     return;
   }
-
-  await supabaseClient
-    .from("guests")
-    .update({
-      confirmed: false,
-    })
-    .eq("id", guestId);
 
   showAdminToast("💜 RSVP removido com sucesso!");
   await loadRSVPsAdmin();

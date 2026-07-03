@@ -22,6 +22,8 @@ O foco do site está nas informações da festa, no controle dos convites e no R
 - Painel administrativo com dashboard, indicadores e atalhos.
 - Gerenciamento de convidados, códigos, limites e status dos convites.
 - Geração criptográfica dos códigos de convite diretamente no Supabase.
+- Criação, edição e ativação de convidados por RPCs administrativas.
+- Criação, edição e exclusão de RSVPs por operações transacionais no banco.
 - Consulta, filtragem, ordenação e exclusão de RSVPs.
 - Exportação de convidados e confirmações em CSV.
 - Layout responsivo para computadores e dispositivos móveis.
@@ -121,6 +123,7 @@ Abrir os arquivos diretamente com `file://` pode impedir alguns recursos de aute
 - As permissões de acesso são protegidas por RLS e funções específicas do banco.
 - O código de convite é validado pela Edge Function, sem acesso direto a operações privilegiadas.
 - Novos códigos são gerados no banco por uma RPC restrita a administradores.
+- O frontend possui apenas leitura direta das tabelas; as mutações passam por RPCs protegidas.
 
 ## Manutenção
 

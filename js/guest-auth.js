@@ -1,5 +1,5 @@
 (function () {
-  const isSecureMode = () => window.GuestAuthConfig?.mode === "supabase";
+  const isSecureMode = () => true;
 
   function getRedirectPage() {
     const requestedPage = new URLSearchParams(window.location.search).get(
@@ -38,19 +38,13 @@
   }
 
   async function getGuest() {
-    return isSecureMode() ? getSecureGuest() : getCurrentGuest();
+    return getSecureGuest();
   }
 
   async function requireGuestPage() {
     const guest = await getGuest();
 
-    if (guest) {
-      if (!isSecureMode()) {
-        refreshSession();
-      }
-
-      return guest;
-    }
+    if (guest) return guest;
 
     window.location.replace(`login.html?redirect=${getCurrentPage()}`);
     return null;
@@ -117,42 +111,13 @@
   }
 
   async function loginWithInviteCode(inviteCode, captchaToken = "") {
-    if (isSecureMode()) {
-      const guest = await claimInvite(inviteCode, captchaToken);
-      logout();
-      return guest;
-    }
-
-    const { data, error } = await supabaseClient
-      .from("guests")
-      .select("*")
-      .eq("invite_code", inviteCode)
-      .eq("active", true)
-      .single();
-
-    if (error || !data) {
-      throw new Error("Código inválido.");
-    }
-
-    const currentAccessCount = data.access_count || 0;
-
-    await supabaseClient
-      .from("guests")
-      .update({
-        access_count: currentAccessCount + 1,
-        last_access: new Date().toISOString(),
-      })
-      .eq("id", data.id);
-
-    saveSession(data);
-    return data;
+    const guest = await claimInvite(inviteCode, captchaToken);
+    logout();
+    return guest;
   }
 
   async function logoutGuest() {
-    if (isSecureMode()) {
-      await supabaseClient.auth.signOut();
-    }
-
+    await supabaseClient.auth.signOut();
     logout();
   }
 

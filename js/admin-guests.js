@@ -643,12 +643,10 @@ window.toggleGuestActive = async function (guestId, nextActive) {
     return;
   }
 
-  const { error } = await supabaseClient
-    .from("guests")
-    .update({
-      active: nextActive,
-    })
-    .eq("id", guestId);
+  const { error } = await supabaseClient.rpc("set_guest_active", {
+    target_guest_id: guestId,
+    next_active: nextActive,
+  });
 
   if (error) {
     console.error(error);
@@ -933,10 +931,13 @@ guestForm.addEventListener("submit", async (event) => {
   };
 
   const result = editingGuest
-    ? await supabaseClient
-        .from("guests")
-        .update(payload)
-        .eq("id", editingGuest.id)
+    ? await supabaseClient.rpc("update_guest_details", {
+        target_guest_id: editingGuest.id,
+        guest_name: name,
+        guest_invite_type: inviteType,
+        guest_couple_members: coupleMembers,
+        guest_max_guests: maxGuests,
+      })
     : await supabaseClient.rpc("create_guest_with_invite", {
         guest_name: name,
         guest_invite_type: inviteType,
@@ -1020,28 +1021,20 @@ adminRSVPForm.addEventListener("submit", async (event) => {
     },
   };
 
-  const result = selectedExistingRSVP
-    ? await supabaseClient
-        .from("rsvps")
-        .update(payload)
-        .eq("id", selectedExistingRSVP.id)
-    : await supabaseClient.from("rsvps").insert([payload]);
+  const result = await supabaseClient.rpc("save_admin_rsvp", {
+    target_guest_id: selectedRSVPGuest.id,
+    submitted_email: payload.email,
+    submitted_food: payload.food,
+    submitted_guest_data: payload.guest_data,
+    submitted_message: payload.message,
+    submitted_phone: payload.phone,
+    submitted_presence: payload.presence,
+  });
 
   if (result.error) {
     console.error(result.error);
     showAdminToast("⚠️ Erro ao salvar RSVP.");
     return;
-  }
-
-  const { error: guestError } = await supabaseClient
-    .from("guests")
-    .update({
-      confirmed: true,
-    })
-    .eq("id", selectedRSVPGuest.id);
-
-  if (guestError) {
-    console.error(guestError);
   }
 
   closeAdminRSVPModal();
@@ -1064,23 +1057,15 @@ deleteAdminRSVPButton.addEventListener("click", async () => {
     return;
   }
 
-  const { error } = await supabaseClient
-    .from("rsvps")
-    .delete()
-    .eq("id", selectedExistingRSVP.id);
+  const { error } = await supabaseClient.rpc("delete_admin_rsvp", {
+    target_rsvp_id: selectedExistingRSVP.id,
+  });
 
   if (error) {
     console.error(error);
     showAdminToast("⚠️ Erro ao remover RSVP.");
     return;
   }
-
-  await supabaseClient
-    .from("guests")
-    .update({
-      confirmed: false,
-    })
-    .eq("id", selectedRSVPGuest.id);
 
   closeAdminRSVPModal();
   showAdminToast("💜 RSVP removido com sucesso!");

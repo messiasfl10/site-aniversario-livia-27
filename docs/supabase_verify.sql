@@ -11,4 +11,8 @@ select
   to_regclass('public.invite_login_attempts') is not null as rate_limit_ok,
   to_regprocedure('public.get_current_guest_profile()') is not null as profile_rpc_ok,
   to_regprocedure('public.create_guest_with_invite(text,text,jsonb,integer)') is not null as secure_invite_rpc_ok,
+  to_regprocedure('public.update_guest_details(uuid,text,text,jsonb,integer)') is not null as update_guest_rpc_ok,
+  to_regprocedure('public.set_guest_active(uuid,boolean)') is not null as guest_status_rpc_ok,
+  to_regprocedure('public.save_admin_rsvp(uuid,text,text,jsonb,text,text,text)') is not null as admin_rsvp_rpc_ok,
+  to_regprocedure('public.delete_admin_rsvp(uuid)') is not null as delete_rsvp_rpc_ok,
   to_regprocedure('public.save_current_rsvp(text,text,jsonb,text,text,text)') is not null as rsvp_rpc_ok;
