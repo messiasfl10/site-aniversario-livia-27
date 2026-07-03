@@ -393,7 +393,7 @@ function formatInviteTime(time) {
 }
 
 function getInvitationSiteUrl() {
-  return new URL("login.html", window.location.href).href;
+  return new URL("./", window.location.href).href;
 }
 
 function buildInviteMessage(guest) {
@@ -403,8 +403,8 @@ function buildInviteMessage(guest) {
     ? "Vocês estão convidados(as)"
     : "Você está convidado(a)";
   const confirmationInstruction = isCouple
-    ? "informem o código, acessem o convite e toquem"
-    : "informe o código, acesse o convite e toque";
+    ? "acessem o site, toquem em “Confirmar presença”, informem o código de convite e preencham a confirmação"
+    : "acesse o site, toque em “Confirmar presença”, informe o código de convite e preencha a confirmação";
   const confirmationRequest = isCouple ? "confirmem" : "confirme";
   const accessInstruction = isCouple ? "entrem" : "entre";
   const codeInstruction = isCouple ? "Usem" : "Use";
@@ -419,7 +419,7 @@ function buildInviteMessage(guest) {
     month: "long",
   });
 
-  return `Oi, ${guest.name}! 💜\n\n${invitationText} para comemorar o meu aniversário! 🎉\n\n📅 ${eventDate}, às ${formatInviteTime(celebration.time)}\n📍 ${venue.name} — ${venue.address}, ${venue.city}/${venue.state}\n\nPara acessar o convite e confirmar a presença, ${accessInstruction} em:\n${getInvitationSiteUrl()}\n\n${codeInstruction} o código de convite: ${guest.invite_code}\n\nÉ bem rapidinho: ${confirmationInstruction} em “Confirmar presença”. Peço que ${confirmationRequest} até ${deadline}.\n\n${closingText}! ✨💜`;
+  return `Oi, ${guest.name}! 💜\n\n${invitationText} para comemorar o meu aniversário! 🎉\n\n📅 ${eventDate}, às ${formatInviteTime(celebration.time)}\n📍 ${venue.name} — ${venue.address}, ${venue.city}/${venue.state}\n\nPara acessar o convite e confirmar a presença, ${accessInstruction} em:\n${getInvitationSiteUrl()}\n\n${codeInstruction} o código de convite: ${guest.invite_code}\n\nÉ bem rapidinho: ${confirmationInstruction}. Peço que ${confirmationRequest} até ${deadline}.\n\n${closingText}! ✨💜`;
 }
 
 window.openInviteMessageModal = function (guest) {
