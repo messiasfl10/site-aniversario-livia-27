@@ -1697,6 +1697,49 @@ body .admin-page:not(.admin-dashboard-page) > .admin-header { margin-bottom: 1re
   max-width: 680px;
 }
 
+.admin-invite-message-modal-content {
+  max-width: 660px;
+}
+
+.admin-invite-message-content {
+  padding: 1.4rem 1.5rem 1.6rem;
+}
+
+.admin-invite-message-help {
+  margin: 0 0 1rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.admin-invite-message-content label {
+  display: block;
+  margin-bottom: .4rem;
+  color: #4b3d51;
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+#inviteMessageText {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 340px;
+  resize: vertical;
+  border: 1px solid #dfd1e3;
+  border-radius: 12px;
+  padding: 1rem;
+  background: #fefcff;
+  color: #332a38;
+  font: inherit;
+  font-size: .9rem;
+  line-height: 1.55;
+}
+
+#inviteMessageText:focus {
+  border-color: #7d1598;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(86, 0, 114, .1);
+}
+
 .admin-modal-content > h2 {
   position: sticky;
   top: 0;

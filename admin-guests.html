@@ -229,6 +229,32 @@
 
     <div id="adminToast" class="admin-toast"></div>
 
+    <div class="admin-modal" id="inviteMessageModal">
+      <div class="admin-modal-content admin-invite-message-modal-content">
+        <button
+          type="button"
+          class="admin-modal-close"
+          id="closeInviteMessageModalButton"
+          aria-label="Fechar mensagem do convite"
+        >
+          &times;
+        </button>
+
+        <h2>Mensagem do convite</h2>
+
+        <div class="admin-invite-message-content">
+          <p class="admin-invite-message-help">
+            A mensagem já está personalizada. Você pode editá-la antes de copiar.
+          </p>
+          <label for="inviteMessageText">Texto para enviar</label>
+          <textarea id="inviteMessageText" rows="16"></textarea>
+          <button type="button" id="copyInviteMessageButton" class="admin-save-button">
+            Copiar mensagem
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="admin-modal" id="adminRSVPModal">
       <div class="admin-modal-content">
         <button

@@ -58,6 +58,14 @@ const closeGuestDetailsModalButton = document.getElementById(
 );
 const guestDetailsTitle = document.getElementById("guestDetailsTitle");
 const guestDetailsContent = document.getElementById("guestDetailsContent");
+const inviteMessageModal = document.getElementById("inviteMessageModal");
+const closeInviteMessageModalButton = document.getElementById(
+  "closeInviteMessageModalButton",
+);
+const inviteMessageText = document.getElementById("inviteMessageText");
+const copyInviteMessageButton = document.getElementById(
+  "copyInviteMessageButton",
+);
 const { formatDate } = AdminCommon;
 const showAdminToast = AdminCommon.showToast;
 
@@ -142,6 +150,8 @@ function renderAdminIcon(name) {
       '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg>',
     rsvp:
       '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="m4 7 8 6 8-6"/></svg>',
+    message:
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/><path d="M8 9h8M8 13h5"/></svg>',
   };
 
   return icons[name] || "";
@@ -302,6 +312,17 @@ function renderGuestDetailsActions(guest) {
 
       <button
         class="admin-detail-action-card"
+        onclick='openInviteMessageModal(${JSON.stringify(guest)})'
+      >
+        <span class="admin-detail-action-icon">${renderAdminIcon("message")}</span>
+        <span>
+          <strong>Criar mensagem</strong>
+          <small>Gera um texto personalizado para enviar ao convidado.</small>
+        </span>
+      </button>
+
+      <button
+        class="admin-detail-action-card"
         onclick='copyInviteCode("${guest.invite_code}")'
       >
         <span class="admin-detail-action-icon">${renderAdminIcon("clipboard")}</span>
@@ -365,6 +386,61 @@ window.openGuestDetailsModal = function (guest) {
 window.closeGuestDetailsModal = function () {
   guestDetailsModal.classList.remove("active");
 };
+
+function formatInviteTime(time) {
+  const [hours, minutes] = String(time || "").split(":");
+  return minutes === "00" ? `${hours}h` : `${hours}h${minutes}`;
+}
+
+function getInvitationSiteUrl() {
+  return new URL("login.html", window.location.href).href;
+}
+
+function buildInviteMessage(guest) {
+  const { celebration, venue } = EventConfig;
+  const isCouple = guest.invite_type === "couple";
+  const invitationText = isCouple
+    ? "Vocês estão convidados(as)"
+    : "Você está convidado(a)";
+  const confirmationInstruction = isCouple
+    ? "informem o código, acessem o convite e toquem"
+    : "informe o código, acesse o convite e toque";
+  const confirmationRequest = isCouple ? "confirmem" : "confirme";
+  const accessInstruction = isCouple ? "entrem" : "entre";
+  const codeInstruction = isCouple ? "Usem" : "Use";
+  const closingText = isCouple ? "Eu espero vocês" : "Eu espero você";
+  const eventDate = EventConfig.formatDate(celebration.date, {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+  const deadline = EventConfig.formatDate(celebration.rsvpDeadline, {
+    day: "2-digit",
+    month: "long",
+  });
+
+  return `Oi, ${guest.name}! 💜\n\n${invitationText} para comemorar o meu aniversário! 🎉\n\n📅 ${eventDate}, às ${formatInviteTime(celebration.time)}\n📍 ${venue.name} — ${venue.address}, ${venue.city}/${venue.state}\n\nPara acessar o convite e confirmar a presença, ${accessInstruction} em:\n${getInvitationSiteUrl()}\n\n${codeInstruction} o código de convite: ${guest.invite_code}\n\nÉ bem rapidinho: ${confirmationInstruction} em “Confirmar presença”. Peço que ${confirmationRequest} até ${deadline}.\n\n${closingText}! ✨💜`;
+}
+
+window.openInviteMessageModal = function (guest) {
+  inviteMessageText.value = buildInviteMessage(guest);
+  inviteMessageModal.classList.add("active");
+  inviteMessageText.focus();
+};
+
+function closeInviteMessageModal() {
+  inviteMessageModal.classList.remove("active");
+}
+
+async function copyInviteMessage() {
+  try {
+    await navigator.clipboard.writeText(inviteMessageText.value);
+    showAdminToast("💜 Mensagem copiada! Agora é só enviar.");
+  } catch (error) {
+    console.error(error);
+    showAdminToast("⚠️ Erro ao copiar mensagem.");
+  }
+}
 
 async function loadGuestsAdmin() {
   const { data, error } = await supabaseClient
@@ -1112,6 +1188,14 @@ guestModal.addEventListener("click", (event) => {
 guestDetailsModal.addEventListener("click", (event) => {
   if (event.target === guestDetailsModal) {
     closeGuestDetailsModal();
+  }
+});
+
+closeInviteMessageModalButton.addEventListener("click", closeInviteMessageModal);
+copyInviteMessageButton.addEventListener("click", copyInviteMessage);
+inviteMessageModal.addEventListener("click", (event) => {
+  if (event.target === inviteMessageModal) {
+    closeInviteMessageModal();
   }
 });
 
