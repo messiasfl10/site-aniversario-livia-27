@@ -52,7 +52,7 @@ const guestCountGroup = document
    Guest Limit
 ========================= */
 
-guestCount.innerHTML = "";
+guestCount.replaceChildren();
 
 for (let i = 0; i <= (guest.max_guests || 0); i++) {
   const option = document.createElement("option");
@@ -86,7 +86,7 @@ function showToast(message) {
 ========================= */
 
 guestCount.addEventListener("change", () => {
-  guestFields.innerHTML = "";
+  guestFields.replaceChildren();
 
   const count = parseInt(guestCount.value || 0);
 
@@ -95,44 +95,44 @@ guestCount.addEventListener("change", () => {
 
     wrapper.classList.add("guest-card");
 
-    wrapper.innerHTML = `
-      <h4>
-        Acompanhante ${i}
-      </h4>
+    const title = document.createElement("h4");
+    title.textContent = `Acompanhante ${i}`;
+    wrapper.appendChild(title);
 
-      <div class="form-group">
-        <label>
-          Nome
-        </label>
+    const nameGroup = document.createElement("div");
+    nameGroup.className = "form-group";
 
-        <input
-          type="text"
-          name="guest_name_${i}"
-          required
-        >
-      </div>
+    const nameLabel = document.createElement("label");
+    nameLabel.textContent = "Nome";
 
-      <div class="form-group">
-        <label>
-          É criança?
-        </label>
+    const nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.name = `guest_name_${i}`;
+    nameInput.required = true;
 
-        <select
-          class="child-select"
-          data-index="${i}"
-          name="guest_child_${i}"
-        >
-          <option value="Não">
-            Não
-          </option>
+    nameGroup.append(nameLabel, nameInput);
+    wrapper.appendChild(nameGroup);
 
-          <option value="Sim">
-            Sim
-          </option>
-        </select>
-      </div>
+    const childGroup = document.createElement("div");
+    childGroup.className = "form-group";
 
-    `;
+    const childLabel = document.createElement("label");
+    childLabel.textContent = "É criança?";
+
+    const childSelect = document.createElement("select");
+    childSelect.className = "child-select";
+    childSelect.dataset.index = String(i);
+    childSelect.name = `guest_child_${i}`;
+
+    ["Não", "Sim"].forEach((value) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      childSelect.appendChild(option);
+    });
+
+    childGroup.append(childLabel, childSelect);
+    wrapper.appendChild(childGroup);
 
     guestFields.appendChild(wrapper);
   }
@@ -198,7 +198,7 @@ function hideCompanions(keepCache = true) {
   }
 
   guestCount.value = 0;
-  guestFields.innerHTML = "";
+  guestFields.replaceChildren();
 }
 
 function showCompanionsIfAllowed({ restoreCached = true } = {}) {
@@ -284,43 +284,33 @@ function setupCoupleInvite() {
 
   const members = guest.couple_members || [];
 
-  coupleMembersFields.innerHTML = members
-    .map(
-      (member, index) => `
-        <div class="couple-member-card">
+  coupleMembersFields.replaceChildren();
 
-          <strong>
-            ${member.name}
-          </strong>
+  members.forEach((member, index) => {
+    const card = document.createElement("div");
+    card.className = "couple-member-card";
 
-          <div class="radio-group">
+    const name = document.createElement("strong");
+    name.textContent = member.name || "Sem nome";
+    card.appendChild(name);
 
-            <label>
-              <input
-                type="radio"
-                name="couple_member_${index}"
-                value="Sim"
-                required
-              >
-              Sim
-            </label>
+    const radioGroup = document.createElement("div");
+    radioGroup.className = "radio-group";
 
-            <label>
-              <input
-                type="radio"
-                name="couple_member_${index}"
-                value="Não"
-                required
-              >
-              Não
-            </label>
+    ["Sim", "Não"].forEach((value) => {
+      const label = document.createElement("label");
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = `couple_member_${index}`;
+      input.value = value;
+      input.required = true;
+      label.append(input, document.createTextNode(` ${value}`));
+      radioGroup.appendChild(label);
+    });
 
-          </div>
-
-        </div>
-      `,
-    )
-    .join("");
+    card.appendChild(radioGroup);
+    coupleMembersFields.appendChild(card);
+  });
 
   document
     .querySelectorAll('input[name^="couple_member_"]')

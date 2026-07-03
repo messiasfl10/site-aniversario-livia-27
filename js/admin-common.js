@@ -1,4 +1,37 @@
 (function () {
+  function appendTextElement(parent, tagName, text, className = "") {
+    const element = document.createElement(tagName);
+
+    if (className) {
+      element.className = className;
+    }
+
+    element.textContent = text;
+    parent.appendChild(element);
+    return element;
+  }
+
+  function getSafeLocalUrl(path) {
+    const url = new URL(path, window.location.href);
+
+    if (url.origin !== window.location.origin) {
+      return null;
+    }
+
+    return url.href;
+  }
+
+  function setSafeHref(anchor, path) {
+    const href = getSafeLocalUrl(path);
+
+    if (!href) {
+      anchor.removeAttribute("href");
+      return;
+    }
+
+    anchor.href = href;
+  }
+
   function setupShell() {
     const nav = document.querySelector(".admin-nav");
     if (!nav) return;
@@ -13,17 +46,38 @@
       ["admin-rsvps.html", "✓", "Confirmações"],
     ];
 
-    nav.innerHTML = `
-      <a class="admin-nav-brand" href="./admin-dashboard.html">
-        <span>${celebrantName.charAt(0)}</span><div><strong>${celebrantName}</strong><small>${celebratedAge} anos</small></div>
-      </a>
-      <div class="admin-nav-label">Organização</div>
-      ${items.map(([href, icon, label]) => `
-        <a class="admin-nav-link ${page === href ? "active" : ""}" href="./${href}">
-          <span class="admin-nav-icon">${icon}</span><span>${label}</span>
-        </a>`).join("")}
-      <a class="admin-nav-site-link" href="./index.html" target="_blank" rel="noopener noreferrer">↗ Ver site</a>
-    `;
+    nav.replaceChildren();
+
+    const brand = document.createElement("a");
+    brand.className = "admin-nav-brand";
+    setSafeHref(brand, "./admin-dashboard.html");
+
+    appendTextElement(brand, "span", celebrantName.charAt(0));
+
+    const brandText = document.createElement("div");
+    appendTextElement(brandText, "strong", celebrantName);
+    appendTextElement(brandText, "small", `${celebratedAge} anos`);
+    brand.appendChild(brandText);
+    nav.appendChild(brand);
+
+    appendTextElement(nav, "div", "Organização", "admin-nav-label");
+
+    items.forEach(([href, icon, label]) => {
+      const link = document.createElement("a");
+      link.className = `admin-nav-link ${page === href ? "active" : ""}`.trim();
+      setSafeHref(link, `./${href}`);
+      appendTextElement(link, "span", icon, "admin-nav-icon");
+      appendTextElement(link, "span", label);
+      nav.appendChild(link);
+    });
+
+    const siteLink = document.createElement("a");
+    siteLink.className = "admin-nav-site-link";
+    siteLink.target = "_blank";
+    siteLink.rel = "noopener noreferrer";
+    setSafeHref(siteLink, "./index.html");
+    siteLink.textContent = "↗ Ver site";
+    nav.appendChild(siteLink);
 
     const logoutButton = document.getElementById("logoutButton");
     if (logoutButton) {
@@ -108,7 +162,10 @@
   }
 
   window.AdminCommon = {
+    appendTextElement,
     formatDate,
+    getSafeLocalUrl,
+    setSafeHref,
     setText,
     setupLogout,
     showToast,

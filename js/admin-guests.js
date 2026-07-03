@@ -97,6 +97,24 @@ function normalizeText(value) {
     .toLowerCase();
 }
 
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (character) => {
+    const entities = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
+
+    return entities[character];
+  });
+}
+
+function getCachedGuestById(guestId) {
+  return cachedGuests.find((guest) => String(guest.id) === String(guestId));
+}
+
 function compareValues(a, b) {
   if (typeof a === "number" || typeof b === "number") {
     return Number(a || 0) - Number(b || 0);
@@ -131,105 +149,137 @@ function maskPhoneInput(input) {
 }
 
 function renderInviteTypeBadge(type) {
+  const badge = document.createElement("span");
+
   if (type === "couple") {
-    return `<span class="admin-badge badge-payment">Casal</span>`;
+    badge.className = "admin-badge badge-payment";
+    badge.textContent = "Casal";
+    return badge;
   }
 
-  return `<span class="admin-badge badge-muted">Individual</span>`;
+  badge.className = "admin-badge badge-muted";
+  badge.textContent = "Individual";
+  return badge;
 }
 
-function renderAdminIcon(name) {
-  const icons = {
-    clipboard:
-      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h8"/><path d="M9 3h6v4H9z"/><path d="M7 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1"/></svg>',
-    edit:
-      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
-    eye:
-      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
-    power:
-      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg>',
-    rsvp:
-      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="m4 7 8 6 8-6"/></svg>',
-    message:
-      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/><path d="M8 9h8M8 13h5"/></svg>',
-  };
+function createStatusBadge(text, className) {
+  const badge = document.createElement("span");
+  badge.className = `admin-badge ${className}`;
+  badge.textContent = text;
+  return badge;
+}
 
-  return icons[name] || "";
+function createAdminIcon(name) {
+  const icons = {
+    clipboard: ["M8 5h8", "M9 3h6v4H9z", "M7 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1"],
+    edit: ["M12 20h9", "M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"],
+    eye: ["M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"],
+    power: ["M12 2v10", "M18.4 6.6a9 9 0 1 1-12.8 0"],
+    rsvp: ["M4 5h16v14H4z", "m4 7 8 6 8-6"],
+    message: ["M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z", "M8 9h8M8 13h5"],
+  };
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+
+  (icons[name] || []).forEach((pathData) => {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", pathData);
+    svg.appendChild(path);
+  });
+
+  if (name === "eye") {
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", "12");
+    circle.setAttribute("cy", "12");
+    circle.setAttribute("r", "3");
+    svg.appendChild(circle);
+  }
+
+  return svg;
+}
+
+function createIconButton(className, iconName, label) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = className;
+  button.append(createAdminIcon(iconName), document.createTextNode(` ${label}`));
+  return button;
 }
 
 function renderGuestActions(guest) {
-  return `
-    <div class="admin-actions compact-actions">
-      <button
-        class="admin-action-button icon-action"
-        onclick='openGuestDetailsModal(${JSON.stringify(guest)})'
-        title="Ver detalhes"
-      >
-        ${renderAdminIcon("eye")}
-        Detalhes
-      </button>
+  const actions = document.createElement("div");
+  actions.className = "admin-actions compact-actions";
 
-      <button
-        class="admin-action-button icon-action"
-        onclick='openEditGuestModal(${JSON.stringify(guest)})'
-        title="Editar convidado"
-      >
-        ${renderAdminIcon("edit")}
-        Editar
-      </button>
-    </div>
-  `;
+  const detailsButton = createIconButton("admin-action-button icon-action", "eye", "Detalhes");
+  detailsButton.title = "Ver detalhes";
+  detailsButton.addEventListener("click", () => {
+    window.openGuestDetailsModal(guest);
+  });
+
+  const editButton = createIconButton("admin-action-button icon-action", "edit", "Editar");
+  editButton.title = "Editar convidado";
+  editButton.addEventListener("click", () => {
+    window.openEditGuestModal(guest);
+  });
+
+  actions.append(detailsButton, editButton);
+  return actions;
 }
 
 function renderGuestCoupleMembers(guest) {
   const members = guest.couple_members || [];
 
   if (guest.invite_type !== "couple" || !members.length) {
-    return "";
+    return null;
   }
 
-  return `
-    <section class="admin-details-section">
-      <span class="admin-details-label">Casal</span>
-      <div class="admin-details-list">
-        ${members
-          .map(
-            (member) => `
-              <div class="admin-details-item">
-                <div>
-                  <strong>${member.name || "Sem nome"}</strong>
-                </div>
-              </div>
-            `,
-          )
-          .join("")}
-      </div>
-    </section>
-  `;
+  const section = createDetailsSection("Casal");
+  const list = document.createElement("div");
+  list.className = "admin-details-list";
+
+  members.forEach((member) => {
+    const item = document.createElement("div");
+    item.className = "admin-details-item";
+
+    const content = document.createElement("div");
+    const name = document.createElement("strong");
+    name.textContent = member.name || "Sem nome";
+    content.appendChild(name);
+    item.appendChild(content);
+    list.appendChild(item);
+  });
+
+  section.appendChild(list);
+  return section;
 }
 
 function renderGuestInviteMeta(guest) {
   const items = [
-    ["Código", `<code>${guest.invite_code}</code>`],
+    ["Código", guest.invite_code || "-"],
     ["Acompanhantes", guest.max_guests || 0],
     ["Último acesso", formatDate(guest.last_access)],
     ["Acessos", guest.access_count || 0],
   ];
 
-  return `
-    <div class="admin-details-meta-grid">
-      ${items
-        .map(
-          ([label, value]) => `
-            <div class="admin-details-meta-item">
-              <span>${label}</span>
-              <strong>${value}</strong>
-            </div>
-          `,
-        )
-        .join("")}
-    </div>
-  `;
+  const grid = document.createElement("div");
+  grid.className = "admin-details-meta-grid";
+
+  items.forEach(([label, value], index) => {
+    const item = document.createElement("div");
+    item.className = "admin-details-meta-item";
+
+    const labelElement = document.createElement("span");
+    labelElement.textContent = label;
+
+    const valueElement = document.createElement(index === 0 ? "code" : "strong");
+    valueElement.textContent = String(value);
+
+    item.append(labelElement, valueElement);
+    grid.appendChild(item);
+  });
+
+  return grid;
 }
 
 function getInviteTypeLabel(type) {
@@ -278,6 +328,39 @@ function calculateGuestPlanningSummary(guests) {
   );
 }
 
+function createDetailsSection(label) {
+  const section = document.createElement("section");
+  section.className = "admin-details-section";
+
+  const labelElement = document.createElement("span");
+  labelElement.className = "admin-details-label";
+  labelElement.textContent = label;
+  section.appendChild(labelElement);
+
+  return section;
+}
+
+function createDetailActionCard({ className = "", icon, title, description, onClick }) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = `admin-detail-action-card ${className}`.trim();
+
+  const iconWrapper = document.createElement("span");
+  iconWrapper.className = "admin-detail-action-icon";
+  iconWrapper.appendChild(createAdminIcon(icon));
+
+  const textWrapper = document.createElement("span");
+  const titleElement = document.createElement("strong");
+  titleElement.textContent = title;
+  const descriptionElement = document.createElement("small");
+  descriptionElement.textContent = description;
+  textWrapper.append(titleElement, descriptionElement);
+
+  button.append(iconWrapper, textWrapper);
+  button.addEventListener("click", onClick);
+  return button;
+}
+
 function renderGuestDetailsActions(guest) {
   const activeActionLabel = guest.active
     ? "Desativar convidado"
@@ -286,101 +369,103 @@ function renderGuestDetailsActions(guest) {
     ? "Impede o acesso do convite sem remover o cadastro."
     : "Reativa o acesso deste convite.";
 
-  return `
-    <div class="admin-detail-action-grid">
-      <button
-        class="admin-detail-action-card"
-        onclick='closeGuestDetailsModal(); openEditGuestModal(${JSON.stringify(guest)})'
-      >
-        <span class="admin-detail-action-icon">${renderAdminIcon("edit")}</span>
-        <span>
-          <strong>Editar convidado</strong>
-          <small>Altera nome, tipo de convite, acompanhantes e permissão.</small>
-        </span>
-      </button>
+  const grid = document.createElement("div");
+  grid.className = "admin-detail-action-grid";
 
-      <button
-        class="admin-detail-action-card ${guest.active ? "danger" : "success"}"
-        onclick='closeGuestDetailsModal(); toggleGuestActive("${guest.id}", ${!guest.active})'
-      >
-        <span class="admin-detail-action-icon">${renderAdminIcon("power")}</span>
-        <span>
-          <strong>${activeActionLabel}</strong>
-          <small>${activeActionDescription}</small>
-        </span>
-      </button>
+  grid.append(
+    createDetailActionCard({
+      icon: "edit",
+      title: "Editar convidado",
+      description: "Altera nome, tipo de convite, acompanhantes e permissão.",
+      onClick: () => {
+        closeGuestDetailsModal();
+        window.openEditGuestModal(guest);
+      },
+    }),
+    createDetailActionCard({
+      className: guest.active ? "danger" : "success",
+      icon: "power",
+      title: activeActionLabel,
+      description: activeActionDescription,
+      onClick: () => {
+        closeGuestDetailsModal();
+        toggleGuestActive(guest.id, !guest.active);
+      },
+    }),
+    createDetailActionCard({
+      icon: "message",
+      title: "Criar mensagem",
+      description: "Gera um texto personalizado para enviar ao convidado.",
+      onClick: () => {
+        window.openInviteMessageModal(guest);
+      },
+    }),
+    createDetailActionCard({
+      icon: "clipboard",
+      title: "Copiar código",
+      description: "Copia o código de acesso deste convite.",
+      onClick: () => {
+        copyInviteCode(guest.invite_code);
+      },
+    }),
+    createDetailActionCard({
+      icon: "rsvp",
+      title: "RSVP manual",
+      description: "Cria ou atualiza a confirmação de presença.",
+      onClick: () => {
+        closeGuestDetailsModal();
+        openAdminRSVPModal(guest);
+      },
+    }),
+  );
 
-      <button
-        class="admin-detail-action-card"
-        onclick='openInviteMessageModal(${JSON.stringify(guest)})'
-      >
-        <span class="admin-detail-action-icon">${renderAdminIcon("message")}</span>
-        <span>
-          <strong>Criar mensagem</strong>
-          <small>Gera um texto personalizado para enviar ao convidado.</small>
-        </span>
-      </button>
-
-      <button
-        class="admin-detail-action-card"
-        onclick='copyInviteCode("${guest.invite_code}")'
-      >
-        <span class="admin-detail-action-icon">${renderAdminIcon("clipboard")}</span>
-        <span>
-          <strong>Copiar código</strong>
-          <small>Copia o código de acesso deste convite.</small>
-        </span>
-      </button>
-
-      <button
-        class="admin-detail-action-card"
-        onclick='closeGuestDetailsModal(); openAdminRSVPModal(${JSON.stringify(guest)})'
-      >
-        <span class="admin-detail-action-icon">${renderAdminIcon("rsvp")}</span>
-        <span>
-          <strong>RSVP manual</strong>
-          <small>Cria ou atualiza a confirmação de presença.</small>
-        </span>
-      </button>
-    </div>
-  `;
+  return grid;
 }
 
 window.openGuestDetailsModal = function (guest) {
   guestDetailsTitle.textContent = guest.name || "Detalhes do Convidado";
 
-  guestDetailsContent.innerHTML = `
-    <section class="admin-details-section">
-      <span class="admin-details-label">Resumo</span>
-      <div class="guest-situation-stack">
-        ${renderInviteTypeBadge(guest.invite_type)}
-        ${
-          guest.confirmed
-            ? '<span class="admin-badge badge-available">RSVP confirmado</span>'
-            : '<span class="admin-badge badge-muted">RSVP pendente</span>'
-        }
-        ${
-          guest.active
-            ? '<span class="admin-badge badge-available">Ativo</span>'
-            : '<span class="admin-badge badge-danger">Inativo</span>'
-        }
-      </div>
-    </section>
+  const summarySection = createDetailsSection("Resumo");
+  const situationStack = document.createElement("div");
+  situationStack.className = "guest-situation-stack";
+  situationStack.append(
+    renderInviteTypeBadge(guest.invite_type),
+    guest.confirmed
+      ? createStatusBadge("RSVP confirmado", "badge-available")
+      : createStatusBadge("RSVP pendente", "badge-muted"),
+    guest.active
+      ? createStatusBadge("Ativo", "badge-available")
+      : createStatusBadge("Inativo", "badge-danger"),
+  );
+  summarySection.appendChild(situationStack);
 
-    <section class="admin-details-section">
-      <span class="admin-details-label">Ações</span>
-      ${renderGuestDetailsActions(guest)}
-    </section>
+  const actionsSection = createDetailsSection("Ações");
+  actionsSection.appendChild(renderGuestDetailsActions(guest));
 
-    <section class="admin-details-section">
-      <span class="admin-details-label">Convite</span>
-      ${renderGuestInviteMeta(guest)}
-    </section>
+  const inviteSection = createDetailsSection("Convite");
+  inviteSection.appendChild(renderGuestInviteMeta(guest));
 
-    ${renderGuestCoupleMembers(guest)}
-  `;
+  const coupleSection = renderGuestCoupleMembers(guest);
+  const sections = [summarySection, actionsSection, inviteSection];
+
+  if (coupleSection) {
+    sections.push(coupleSection);
+  }
+
+  guestDetailsContent.replaceChildren(...sections);
 
   guestDetailsModal.classList.add("active");
+};
+
+window.openGuestDetailsModalById = function (guestId) {
+  const guest = getCachedGuestById(guestId);
+
+  if (!guest) {
+    showAdminToast("⚠️ Convidado não encontrado.");
+    return;
+  }
+
+  window.openGuestDetailsModal(guest);
 };
 
 window.closeGuestDetailsModal = function () {
@@ -459,56 +544,83 @@ async function loadGuestsAdmin() {
 }
 
 function renderGuestsTable(guests) {
+  guestsTableBody.replaceChildren();
+
   if (!guests.length) {
-    guestsTableBody.innerHTML = `
-      <tr>
-        <td colspan="9" class="admin-empty-state">
-          Nenhum convidado encontrado para os filtros selecionados.
-        </td>
-      </tr>
-    `;
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 9;
+    cell.className = "admin-empty-state";
+    cell.textContent = "Nenhum convidado encontrado para os filtros selecionados.";
+    row.appendChild(cell);
+    guestsTableBody.appendChild(row);
     return;
   }
 
-  guestsTableBody.innerHTML = guests
-    .map(
-      (guest) => `
-        <tr>
-          <td>${guest.name}</td>
-          <td>${renderInviteTypeBadge(guest.invite_type)}</td>
-          <td>${guest.max_guests || 0}</td>
-          <td>
-            ${
-              guest.confirmed
-                ? '<span class="admin-badge badge-available">Sim</span>'
-                : '<span class="admin-badge badge-muted">Não</span>'
-            }
-          </td>
-          <td>
-            ${
-              guest.active
-                ? '<span class="admin-badge badge-available">Ativo</span>'
-                : '<span class="admin-badge badge-danger">Inativo</span>'
-            }
-          </td>
-          <td>
-            <button
-              type="button"
-              class="admin-code-button"
-              onclick='copyInviteCode("${guest.invite_code}")'
-              title="Copiar código"
-              aria-label="Copiar código ${guest.invite_code}"
-            >
-              <code>${guest.invite_code}</code>
-            </button>
-          </td>
-          <td>${formatDate(guest.last_access)}</td>
-          <td>${guest.access_count || 0}</td>
-          <td>${renderGuestActions(guest)}</td>
-        </tr>
-      `,
-    )
-    .join("");
+  guests.forEach((guest) => {
+    const row = document.createElement("tr");
+
+    const nameCell = document.createElement("td");
+    nameCell.textContent = guest.name || "-";
+
+    const typeCell = document.createElement("td");
+    typeCell.appendChild(renderInviteTypeBadge(guest.invite_type));
+
+    const companionsCell = document.createElement("td");
+    companionsCell.textContent = String(guest.max_guests || 0);
+
+    const confirmedCell = document.createElement("td");
+    confirmedCell.appendChild(
+      guest.confirmed
+        ? createStatusBadge("Sim", "badge-available")
+        : createStatusBadge("Não", "badge-muted"),
+    );
+
+    const activeCell = document.createElement("td");
+    activeCell.appendChild(
+      guest.active
+        ? createStatusBadge("Ativo", "badge-available")
+        : createStatusBadge("Inativo", "badge-danger"),
+    );
+
+    const codeCell = document.createElement("td");
+    const codeButton = document.createElement("button");
+    codeButton.type = "button";
+    codeButton.className = "admin-code-button";
+    codeButton.title = "Copiar código";
+    codeButton.setAttribute("aria-label", `Copiar código ${guest.invite_code || ""}`);
+    codeButton.addEventListener("click", () => {
+      copyInviteCode(guest.invite_code);
+    });
+
+    const code = document.createElement("code");
+    code.textContent = guest.invite_code || "-";
+    codeButton.appendChild(code);
+    codeCell.appendChild(codeButton);
+
+    const lastAccessCell = document.createElement("td");
+    lastAccessCell.textContent = formatDate(guest.last_access);
+
+    const accessCountCell = document.createElement("td");
+    accessCountCell.textContent = String(guest.access_count || 0);
+
+    const actionsCell = document.createElement("td");
+    actionsCell.appendChild(renderGuestActions(guest));
+
+    row.append(
+      nameCell,
+      typeCell,
+      companionsCell,
+      confirmedCell,
+      activeCell,
+      codeCell,
+      lastAccessCell,
+      accessCountCell,
+      actionsCell,
+    );
+
+    guestsTableBody.appendChild(row);
+  });
 }
 
 function applyGuestFilters() {
@@ -760,7 +872,7 @@ function closeAdminRSVPModal() {
 }
 
 function renderAdminRSVPGuestOptions(maxGuests) {
-  adminRSVPGuestCountInput.innerHTML = "";
+  adminRSVPGuestCountInput.replaceChildren();
 
   for (let i = 0; i <= maxGuests; i++) {
     const option = document.createElement("option");
@@ -789,7 +901,7 @@ function getAdminRSVPCompanions() {
 }
 
 function renderAdminRSVPCompanionFields(companions = []) {
-  adminRSVPGuestFields.innerHTML = "";
+  adminRSVPGuestFields.replaceChildren();
 
   const count = Number(adminRSVPGuestCountInput.value || 0);
 
@@ -798,33 +910,43 @@ function renderAdminRSVPCompanionFields(companions = []) {
     const wrapper = document.createElement("div");
 
     wrapper.classList.add("admin-rsvp-companion-card");
-    wrapper.innerHTML = `
-      <h4>Acompanhante ${i}</h4>
+    const title = document.createElement("h4");
+    title.textContent = `Acompanhante ${i}`;
 
-      <div class="admin-form-group">
-        <label>Nome</label>
-        <input
-          type="text"
-          class="admin-rsvp-companion-name"
-          data-index="${i}"
-          value="${companion.name || ""}"
-          required
-        >
-      </div>
+    const nameGroup = document.createElement("div");
+    nameGroup.className = "admin-form-group";
 
-      <div class="admin-form-group">
-        <label>É criança?</label>
-        <select class="admin-rsvp-companion-child" data-index="${i}">
-          <option value="Não" ${companion.is_child === "Não" ? "selected" : ""}>
-            Não
-          </option>
-          <option value="Sim" ${companion.is_child === "Sim" ? "selected" : ""}>
-            Sim
-          </option>
-        </select>
-      </div>
+    const nameLabel = document.createElement("label");
+    nameLabel.textContent = "Nome";
 
-    `;
+    const nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.className = "admin-rsvp-companion-name";
+    nameInput.dataset.index = String(i);
+    nameInput.value = companion.name || "";
+    nameInput.required = true;
+    nameGroup.append(nameLabel, nameInput);
+
+    const childGroup = document.createElement("div");
+    childGroup.className = "admin-form-group";
+
+    const childLabel = document.createElement("label");
+    childLabel.textContent = "É criança?";
+
+    const childSelect = document.createElement("select");
+    childSelect.className = "admin-rsvp-companion-child";
+    childSelect.dataset.index = String(i);
+
+    ["Não", "Sim"].forEach((value) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      option.selected = companion.is_child === value;
+      childSelect.appendChild(option);
+    });
+
+    childGroup.append(childLabel, childSelect);
+    wrapper.append(title, nameGroup, childGroup);
 
     adminRSVPGuestFields.appendChild(wrapper);
   }
@@ -846,7 +968,7 @@ function hideAdminRSVPCompanions(keepCache = true) {
   }
 
   adminRSVPGuestCountInput.value = 0;
-  adminRSVPGuestFields.innerHTML = "";
+  adminRSVPGuestFields.replaceChildren();
 }
 
 function showAdminRSVPCompanionsIfAllowed() {
@@ -892,7 +1014,7 @@ function updateAdminRSVPCoupleCompanionVisibility() {
 window.openAdminRSVPModal = async function (selectedGuest) {
   selectedRSVPGuest = selectedGuest;
   adminRSVPForm.reset();
-  adminRSVPGuestFields.innerHTML = "";
+  adminRSVPGuestFields.replaceChildren();
   adminRSVPModalTitle.textContent = `RSVP de ${selectedGuest.name}`;
   renderAdminRSVPGuestOptions(selectedGuest.max_guests || 0);
 
@@ -921,37 +1043,36 @@ window.openAdminRSVPModal = async function (selectedGuest) {
     const members = selectedGuest.couple_members || [];
     const existingMembers = data?.guest_data?.members || [];
 
-    adminRSVPCoupleMembers.innerHTML = members
-      .map((member, index) => {
-        const existingPresence = existingMembers[index]?.presence || "Sim";
+    adminRSVPCoupleMembers.replaceChildren();
 
-        return `
-          <div class="admin-form-group">
-            <label>${member.name}</label>
-            <select class="admin-rsvp-member-presence" data-index="${index}">
-              <option value="Sim" ${existingPresence === "Sim" ? "selected" : ""}>
-                Sim
-              </option>
-              <option value="Não" ${existingPresence === "Não" ? "selected" : ""}>
-                Não
-              </option>
-            </select>
-          </div>
-        `;
-      })
-      .join("");
+    members.forEach((member, index) => {
+      const existingPresence = existingMembers[index]?.presence || "Sim";
+      const group = document.createElement("div");
+      group.className = "admin-form-group";
 
-    document
-      .querySelectorAll(".admin-rsvp-member-presence")
-      .forEach((select) => {
-        select.addEventListener(
-          "change",
-          updateAdminRSVPCoupleCompanionVisibility,
-        );
+      const label = document.createElement("label");
+      label.textContent = member.name || `Pessoa ${index + 1}`;
+
+      const select = document.createElement("select");
+      select.className = "admin-rsvp-member-presence";
+      select.dataset.index = String(index);
+
+      ["Sim", "Não"].forEach((value) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        option.selected = existingPresence === value;
+        select.appendChild(option);
       });
+
+      select.addEventListener("change", updateAdminRSVPCoupleCompanionVisibility);
+      group.append(label, select);
+      adminRSVPCoupleMembers.appendChild(group);
+    });
   } else {
     adminRSVPPresenceGroup.style.display = "block";
     adminRSVPCoupleMembers.style.display = "none";
+    adminRSVPCoupleMembers.replaceChildren();
     adminRSVPPresenceInput.value = data?.presence || "Sim";
   }
 

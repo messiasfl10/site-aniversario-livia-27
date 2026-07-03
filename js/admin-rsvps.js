@@ -58,65 +58,78 @@ function compareValues(a, b) {
 }
 
 function renderPresenceBadge(presence) {
-  if (presence === "Sim") {
-    return `<span class="admin-badge badge-available">Sim</span>`;
-  }
+  const badge = document.createElement("span");
 
   if (presence === "Não") {
-    return `<span class="admin-badge badge-danger">Não</span>`;
+    badge.className = "admin-badge badge-danger";
+    badge.textContent = "Não";
+    return badge;
   }
 
-  return `<span class="admin-badge badge-muted">-</span>`;
+  if (presence === "Sim") {
+    badge.className = "admin-badge badge-available";
+    badge.textContent = "Sim";
+    return badge;
+  }
+
+  badge.className = "admin-badge badge-muted";
+  badge.textContent = "-";
+  return badge;
 }
 
 function renderCoupleDetails(rsvp) {
   const members = rsvp.guest_data?.members || [];
 
   if (!members.length) {
-    return "";
+    return null;
   }
 
-  return `
-    <div class="couple-details">
-      ${members
-        .map(
-          (member) => `
-            <div>
-              ${member.name}:
-              <strong>${member.presence}</strong>
-            </div>
-          `,
-        )
-        .join("")}
-    </div>
-  `;
+  const details = document.createElement("div");
+  details.className = "couple-details";
+
+  members.forEach((member) => {
+    const row = document.createElement("div");
+    row.append(
+      document.createTextNode(`${member.name || "Sem nome"}: `),
+    );
+
+    const presence = document.createElement("strong");
+    presence.textContent = member.presence || "-";
+    row.appendChild(presence);
+    details.appendChild(row);
+  });
+
+  return details;
 }
 
 function renderCompanionDetails(rsvp) {
   const companions = rsvp.guest_data?.companions || [];
 
   if (!companions.length) {
-    return `<span class="admin-muted">-</span>`;
+    const empty = document.createElement("span");
+    empty.className = "admin-muted";
+    empty.textContent = "-";
+    return empty;
   }
 
-  return `
-    <div class="companion-details">
-      ${companions
-        .map((companion) => {
-          const childInfo = companion.is_child === "Sim"
-            ? ` <span class="child-info">Criança</span>`
-            : "";
+  const details = document.createElement("div");
+  details.className = "companion-details";
 
-          return `
-            <div>
-              ${companion.name || "Sem nome"}
-              ${childInfo}
-            </div>
-          `;
-        })
-        .join("")}
-    </div>
-  `;
+  companions.forEach((companion) => {
+    const row = document.createElement("div");
+    row.append(document.createTextNode(companion.name || "Sem nome"));
+
+    if (companion.is_child === "Sim") {
+      const childInfo = document.createElement("span");
+      childInfo.className = "child-info";
+      childInfo.textContent = "Criança";
+      row.append(document.createTextNode(" "), childInfo);
+    }
+
+    details.appendChild(row);
+  });
+
+  return details;
 }
 
 function getRSVPGuestMap() {
@@ -153,13 +166,24 @@ function formatRSVPCompanions(rsvp) {
     .join("; ");
 }
 
-function renderAdminIcon(name) {
-  const icons = {
-    trash:
-      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg>',
-  };
+function createTrashIcon() {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
 
-  return icons[name] || "";
+  [
+    "M3 6h18",
+    "M8 6V4h8v2",
+    "M19 6l-1 14H6L5 6",
+    "M10 11v5",
+    "M14 11v5",
+  ].forEach((pathData) => {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", pathData);
+    svg.appendChild(path);
+  });
+
+  return svg;
 }
 
 async function loadRSVPsAdmin() {
@@ -195,52 +219,78 @@ function renderRSVPTable(rsvps, guests) {
     guestMap[guest.id] = guest.name;
   });
 
+  rsvpsTableBody.replaceChildren();
+
   if (!rsvps.length) {
-    rsvpsTableBody.innerHTML = `
-      <tr>
-        <td colspan="8" class="admin-empty-state">
-          Nenhum RSVP encontrado para os filtros selecionados.
-        </td>
-      </tr>
-    `;
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 8;
+    cell.className = "admin-empty-state";
+    cell.textContent = "Nenhum RSVP encontrado para os filtros selecionados.";
+    row.appendChild(cell);
+    rsvpsTableBody.appendChild(row);
     return;
   }
 
-  rsvpsTableBody.innerHTML = rsvps
-    .map((rsvp) => {
-      const guestName =
-        guestMap[rsvp.guest_id] ||
-        rsvp.guest_data?.name ||
-        "Convidado não encontrado";
+  rsvps.forEach((rsvp) => {
+    const guestName =
+      guestMap[rsvp.guest_id] ||
+      rsvp.guest_data?.name ||
+      "Convidado não encontrado";
 
-      const companionCount = Number(rsvp.guest_data?.guest_count || 0);
+    const companionCount = Number(rsvp.guest_data?.guest_count || 0);
+    const row = document.createElement("tr");
 
-      return `
-        <tr>
-          <td>${guestName}</td>
-          <td>
-            ${renderPresenceBadge(rsvp.presence)}
-            ${renderCoupleDetails(rsvp)}
-          </td>
-          <td>${companionCount}</td>
-          <td>${renderCompanionDetails(rsvp)}</td>
-          <td>${rsvp.food || "-"}</td>
-          <td>${rsvp.message || "-"}</td>
-          <td>${formatDate(rsvp.updated_at || rsvp.created_at)}</td>
-          <td>
-            <button
-              class="admin-action-button danger icon-action icon-only"
-              onclick='deleteRSVPFromTable("${rsvp.id}", "${rsvp.guest_id}")'
-              title="Remover RSVP"
-              aria-label="Remover RSVP"
-            >
-              ${renderAdminIcon("trash")}
-            </button>
-          </td>
-        </tr>
-      `;
-    })
-    .join("");
+    [
+      guestName,
+      String(companionCount),
+      rsvp.food || "-",
+      rsvp.message || "-",
+      formatDate(rsvp.updated_at || rsvp.created_at),
+    ].forEach((value, index) => {
+      if (index === 1) {
+        return;
+      }
+
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.appendChild(cell);
+
+      if (index === 0) {
+        const presenceCell = document.createElement("td");
+        presenceCell.appendChild(renderPresenceBadge(rsvp.presence));
+        const coupleDetails = renderCoupleDetails(rsvp);
+
+        if (coupleDetails) {
+          presenceCell.appendChild(coupleDetails);
+        }
+
+        row.appendChild(presenceCell);
+
+        const countCell = document.createElement("td");
+        countCell.textContent = String(companionCount);
+        row.appendChild(countCell);
+
+        const companionCell = document.createElement("td");
+        companionCell.appendChild(renderCompanionDetails(rsvp));
+        row.appendChild(companionCell);
+      }
+    });
+
+    const actionCell = document.createElement("td");
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "admin-action-button danger icon-action icon-only";
+    deleteButton.type = "button";
+    deleteButton.title = "Remover RSVP";
+    deleteButton.setAttribute("aria-label", "Remover RSVP");
+    deleteButton.appendChild(createTrashIcon());
+    deleteButton.addEventListener("click", () => {
+      deleteRSVPFromTable(rsvp.id);
+    });
+    actionCell.appendChild(deleteButton);
+    row.appendChild(actionCell);
+    rsvpsTableBody.appendChild(row);
+  });
 }
 
 function applyRSVPFilters() {
@@ -402,7 +452,7 @@ function clearRSVPFilters() {
   applyRSVPFilters();
 }
 
-window.deleteRSVPFromTable = async function (rsvpId, guestId) {
+window.deleteRSVPFromTable = async function (rsvpId) {
   const confirmed = confirm("Deseja remover esta confirmação de presença?");
 
   if (!confirmed) {

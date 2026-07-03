@@ -9,8 +9,15 @@
 
   function loadScript(source) {
     return new Promise((resolve, reject) => {
+      const url = new URL(source, window.location.href);
+
+      if (url.origin !== window.location.origin) {
+        reject(new Error(`Script não permitido: ${source}`));
+        return;
+      }
+
       const script = document.createElement("script");
-      script.src = source;
+      script.src = url.href;
       script.onload = resolve;
       script.onerror = () => reject(new Error(`Falha ao carregar ${source}`));
       document.body.appendChild(script);

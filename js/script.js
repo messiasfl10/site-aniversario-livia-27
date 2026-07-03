@@ -23,6 +23,16 @@ function setText(id, value) {
   if (element) element.textContent = value;
 }
 
+function getSafeMapsUrl(value) {
+  const url = new URL(value, window.location.href);
+  const allowedOrigins = new Set([
+    "https://www.google.com",
+    "https://google.com",
+  ]);
+
+  return allowedOrigins.has(url.origin) ? url.href : null;
+}
+
 function applyEventContent() {
   const { celebrant, celebration, venue } = eventConfig;
   const age = eventConfig.getCelebratedAge();
@@ -43,7 +53,13 @@ function applyEventContent() {
   setText("eventTimeDetail", `A partir das ${formattedTime}`);
   setText("venueName", venue.name);
   setText("venueAddress", `${venue.address}\n${venue.city} · ${venue.state}, ${venue.postalCode}`);
-  document.getElementById("venueCard")?.setAttribute("href", eventConfig.getMapsUrl());
+  const mapsUrl = getSafeMapsUrl(eventConfig.getMapsUrl());
+  const venueCard = document.getElementById("venueCard");
+
+  if (venueCard && mapsUrl) {
+    venueCard.href = mapsUrl;
+  }
+
   setText("rsvpDeadline", deadline);
   setText("footerName", celebrant.name);
   setText("footerEvent", `${eventDateLong} · ${venue.city}, ${venue.state}`);

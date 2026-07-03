@@ -32,8 +32,15 @@
       }
 
       const script = document.createElement("script");
+      const scriptUrl = new URL(SCRIPT_URL);
+
+      if (scriptUrl.origin !== "https://challenges.cloudflare.com") {
+        reject(new Error("Origem do CAPTCHA não permitida."));
+        return;
+      }
+
       script.id = SCRIPT_ID;
-      script.src = SCRIPT_URL;
+      script.src = scriptUrl.href;
       script.async = true;
       script.defer = true;
       script.addEventListener("load", resolve, { once: true });
