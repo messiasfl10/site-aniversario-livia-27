@@ -14,6 +14,7 @@ Esta release adiciona a geração de mensagens personalizadas de convite no pain
 - Link direto para a página principal do site.
 - Instruções curtas para acessar o site, usar o código de convite e confirmar presença.
 - Link do cardápio, com orientação sobre opções e preços adaptada para convite individual ou de casal.
+- Prévia de compartilhamento do site com título, descrição e imagem principal via Open Graph.
 - Modal para revisar, editar e copiar a mensagem antes do envio.
 - Renderização dinâmica migrada para APIs seguras do DOM.
 - CSP adicionada às páginas públicas e administrativas.

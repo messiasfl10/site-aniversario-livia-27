@@ -9,6 +9,7 @@ O formato segue uma adaptação simples do [Keep a Changelog](https://keepachang
 ### Adicionado
 
 - Link do cardápio na mensagem personalizada, com texto adaptado para convites individuais e de casal.
+- Metadados Open Graph para exibir título, descrição e imagem principal ao compartilhar o site.
 
 - Geração de mensagem personalizada de convite no painel de convidados.
 - Texto automático com variação para convite individual e convite de casal.

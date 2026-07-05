@@ -29,6 +29,7 @@ O foco do site está nas informações da festa, no controle dos convites e no R
 - Exportação de convidados e confirmações em CSV.
 - CSP configurada nas páginas públicas e administrativas, sem `unsafe-inline` para scripts.
 - Layout responsivo para computadores e dispositivos móveis.
+- Prévia de compartilhamento com título, descrição e imagem principal para WhatsApp e redes sociais.
 
 ## Tecnologias
 
