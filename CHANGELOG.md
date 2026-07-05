@@ -4,7 +4,7 @@ Todas as mudanças relevantes deste projeto serão registradas aqui.
 
 O formato segue uma adaptação simples do [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/), com versionamento semântico quando fizer sentido para o projeto.
 
-## [1.1] - 2026-07-03
+## [1.1] - 2026-07-05
 
 ### Adicionado
 
