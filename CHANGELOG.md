@@ -8,6 +8,8 @@ O formato segue uma adaptação simples do [Keep a Changelog](https://keepachang
 
 ### Adicionado
 
+- Link do cardápio na mensagem personalizada, com texto adaptado para convites individuais e de casal.
+
 - Geração de mensagem personalizada de convite no painel de convidados.
 - Texto automático com variação para convite individual e convite de casal.
 - Instruções de confirmação com link direto para o site principal, sem depender de `index.html` na URL.

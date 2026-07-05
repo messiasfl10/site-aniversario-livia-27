@@ -66,6 +66,7 @@ A mensagem inclui:
 - Texto em primeira pessoa para a aniversariante.
 - Variação automática entre convite individual e convite de casal.
 - Data, horário e local da festa.
+- Link do cardápio do local, com indicação para conferir as opções e os preços.
 - Link direto para o site principal.
 - Código de convite.
 - Instruções curtas para acessar o site, tocar em **Confirmar presença**, informar o código e preencher o RSVP.

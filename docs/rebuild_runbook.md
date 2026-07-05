@@ -46,6 +46,7 @@ supabase secrets list
 10. Gere a mensagem de convite no painel de convidados e confira se ela mostra:
     - tratamento correto para individual ou casal;
     - link direto para o site principal;
+    - link do cardápio e tratamento correto da frase para individual ou casal;
     - código de convite correto;
     - instruções de confirmação e prazo de RSVP.
 11. Teste: admin, convite inválido, individual, casal, RSVP Sim/Não, edição do RSVP, geração/cópia da mensagem de convite e logout.
