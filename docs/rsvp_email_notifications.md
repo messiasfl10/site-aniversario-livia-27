@@ -203,9 +203,22 @@ supabase secrets list
 
 A CLI lista os nomes dos secrets, mas não exibe os valores completos.
 
-## 7. Publicar a Edge Function
+## 7. Aplicar a proteção contra envios duplicados
 
-Na raiz do projeto, rode:
+Na raiz do projeto, aplique a migration que cria o controle de entregas:
+
+```bash
+supabase db push
+```
+
+A tabela `rsvp_email_deliveries` não pode ser acessada pelo navegador. Ela é
+usada apenas pela Edge Function para permitir um único envio por versão salva
+do RSVP. A tentativa também fica registrada se o SMTP falhar, evitando que uma
+repetição envie novamente para um destinatário que já tenha recebido o e-mail.
+
+## 8. Publicar a Edge Function
+
+Depois que a migration terminar, rode:
 
 ```bash
 supabase functions deploy notify-rsvp
@@ -217,7 +230,7 @@ Se também quiser publicar ou atualizar a função de convite:
 supabase functions deploy claim-invite
 ```
 
-## 8. Testar
+## 9. Testar
 
 Depois do deploy:
 
@@ -228,6 +241,8 @@ Depois do deploy:
 5. Confira se o convidado recebeu o e-mail de confirmação.
 6. Confira se `ADMIN_EMAIL` recebeu a notificação administrativa.
 7. Confira se o RSVP ficou salvo no painel admin.
+8. Tente chamar novamente a função para o mesmo RSVP e confirme que nenhum
+   e-mail duplicado foi enviado.
 
 ## 9. Ver logs em caso de erro
 

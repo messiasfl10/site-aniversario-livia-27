@@ -116,7 +116,7 @@ rsvp.html                    Confirmação de presença
 3. Ative o login anônimo em **Authentication > Providers > Anonymous**.
 4. Informe a URL do projeto e a chave pública em `js/supabase.js`.
 5. Configure os secrets das funções usando `supabase/functions/.env.example` como referência.
-6. Publique as Edge Functions `claim-invite` e `notify-rsvp`.
+6. Aplique as migrations com `supabase db push` e publique as Edge Functions `claim-invite` e `notify-rsvp`.
 7. Configure o Cloudflare Turnstile conforme [`docs/turnstile_setup.md`](docs/turnstile_setup.md).
 8. Informe a Site Key pública em `js/captcha-config.js`.
 9. Crie o usuário administrativo no Supabase Auth e vincule-o à tabela `admin_users`.

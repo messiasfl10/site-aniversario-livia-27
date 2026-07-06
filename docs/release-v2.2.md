@@ -62,9 +62,11 @@ O passo a passo completo está em [`docs/rsvp_email_notifications.md`](rsvp_emai
 
 ## Deploy
 
-Após configurar os secrets, publique a Edge Function:
+Após configurar os secrets, aplique a migration de proteção e publique a Edge
+Function:
 
 ```bash
+supabase db push
 supabase functions deploy notify-rsvp
 ```
 
@@ -80,6 +82,7 @@ supabase functions deploy claim-invite
 - Teste manual de atualização de RSVP.
 - Teste manual de envio para convite individual.
 - Teste manual de envio para convite de casal.
+- Teste de idempotência para impedir e-mails duplicados do mesmo RSVP.
 - Verificação de recebimento do e-mail do convidado.
 - Verificação de recebimento do e-mail administrativo.
 - `node --check` em `js/guest-data.js`.

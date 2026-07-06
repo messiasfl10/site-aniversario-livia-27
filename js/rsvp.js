@@ -525,7 +525,7 @@ form.addEventListener("submit", async (e) => {
     }
 
     if (existingRSVP) {
-      GuestData.notifyRSVP(wasEditing ? "updated" : "created", existingRSVP)
+      GuestData.notifyRSVP(existingRSVP.id)
         .then(({ error: notifyError }) => {
           if (notifyError) {
             console.error("RSVP notification failed:", notifyError);

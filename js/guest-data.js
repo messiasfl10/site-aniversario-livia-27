@@ -15,11 +15,10 @@
     return { data: data?.[0] || null, error };
   }
 
-  async function notifyRSVP(action, rsvp) {
+  async function notifyRSVP(rsvpId) {
     return supabaseClient.functions.invoke("notify-rsvp", {
       body: {
-        action,
-        rsvp,
+        rsvpId,
       },
     });
   }

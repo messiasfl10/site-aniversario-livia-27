@@ -4,6 +4,7 @@ import nodemailer from "npm:nodemailer@6.9.16";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL");
 const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 const adminEmail = Deno.env.get("ADMIN_EMAIL");
 const smtpHost = Deno.env.get("SMTP_HOST");
 const smtpPort = Number(Deno.env.get("SMTP_PORT") || 587);
@@ -21,6 +22,7 @@ const allowedOrigins = new Set(
 if (
   !supabaseUrl ||
   !supabaseAnonKey ||
+  !supabaseServiceRoleKey ||
   !adminEmail ||
   !smtpHost ||
   !smtpUser ||
@@ -48,17 +50,20 @@ const mailer = nodemailer.createTransport({
 type RSVPAction = "created" | "updated";
 
 type RSVPNotificationPayload = {
-  action?: unknown;
-  rsvp?: {
-    id?: unknown;
-    guest_id?: unknown;
-    presence?: unknown;
-    email?: unknown;
-    phone?: unknown;
-    food?: unknown;
-    message?: unknown;
-    guest_data?: unknown;
-  };
+  rsvpId?: unknown;
+};
+
+type RSVPRecord = {
+  id: string;
+  guest_id: string;
+  presence: unknown;
+  email: unknown;
+  phone: unknown;
+  food: unknown;
+  message: unknown;
+  guest_data: unknown;
+  created_at: string;
+  updated_at: string;
 };
 
 type GuestProfile = {
@@ -166,12 +171,8 @@ function formatList(values: string[]) {
   return values.length ? values.join(", ") : "Nenhum";
 }
 
-function normalizeAction(value: unknown): RSVPAction {
-  return value === "updated" ? "updated" : "created";
-}
-
-function getGuestData(rsvp: RSVPNotificationPayload["rsvp"]) {
-  return isRecord(rsvp?.guest_data) ? rsvp.guest_data : {};
+function getGuestData(rsvp: RSVPRecord) {
+  return isRecord(rsvp.guest_data) ? rsvp.guest_data : {};
 }
 
 function extractNames(
@@ -192,7 +193,7 @@ function extractNames(
 function buildDetails(
   action: RSVPAction,
   guest: GuestProfile,
-  rsvp: NonNullable<RSVPNotificationPayload["rsvp"]>,
+  rsvp: RSVPRecord,
 ): RSVPDetails {
   const guestData = getGuestData(rsvp);
   const companions = extractNames(guestData.companions, (companion) => {
@@ -390,35 +391,102 @@ Deno.serve(async (request) => {
     }
 
     const body = await request.json() as RSVPNotificationPayload;
-    const rsvp = body.rsvp;
+    const rsvpId = asString(body.rsvpId);
 
-    if (!rsvp || asString(rsvp.guest_id) !== guest.id) {
+    if (!rsvpId) {
       return jsonResponse(request, { error: "Invalid RSVP payload." }, 400);
     }
 
-    const details = buildDetails(normalizeAction(body.action), guest, rsvp);
+    // This query runs with the guest token, so RLS remains the source of truth.
+    const { data: rsvp, error: rsvpError } = await supabase
+      .from("rsvps")
+      .select(
+        "id, guest_id, presence, email, phone, food, message, guest_data, created_at, updated_at",
+      )
+      .eq("id", rsvpId)
+      .eq("guest_id", guest.id)
+      .maybeSingle<RSVPRecord>();
+
+    if (rsvpError) {
+      throw rsvpError;
+    }
+
+    if (!rsvp) {
+      return jsonResponse(request, { error: "RSVP not found." }, 404);
+    }
+
+    const action: RSVPAction = rsvp.created_at === rsvp.updated_at
+      ? "created"
+      : "updated";
+    const details = buildDetails(action, guest, rsvp);
 
     if (!isValidEmail(details.email)) {
       return jsonResponse(request, { error: "Invalid guest email." }, 400);
     }
 
+    const serviceClient = createClient(supabaseUrl, supabaseServiceRoleKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    });
+    const { error: claimError } = await serviceClient
+      .from("rsvp_email_deliveries")
+      .insert({
+        guest_id: guest.id,
+        rsvp_id: rsvp.id,
+        rsvp_updated_at: rsvp.updated_at,
+      });
+
+    if (claimError?.code === "23505") {
+      return jsonResponse(request, { ok: true, duplicate: true });
+    }
+
+    if (claimError) {
+      throw claimError;
+    }
+
     const guestEmail = buildGuestEmail(details);
     const adminNotification = buildAdminEmail(details);
 
-    await Promise.all([
-      sendEmail(
-        details.email,
-        guestEmail.subject,
-        guestEmail.html,
-        guestEmail.text,
-      ),
-      sendEmail(
-        adminEmail,
-        adminNotification.subject,
-        adminNotification.html,
-        adminNotification.text,
-      ),
-    ]);
+    try {
+      await Promise.all([
+        sendEmail(
+          details.email,
+          guestEmail.subject,
+          guestEmail.html,
+          guestEmail.text,
+        ),
+        sendEmail(
+          adminEmail,
+          adminNotification.subject,
+          adminNotification.html,
+          adminNotification.text,
+        ),
+      ]);
+
+      const { error: deliveryError } = await serviceClient
+        .from("rsvp_email_deliveries")
+        .update({ sent_at: new Date().toISOString() })
+        .eq("rsvp_id", rsvp.id)
+        .eq("rsvp_updated_at", rsvp.updated_at);
+
+      if (deliveryError) {
+        console.error("Unable to mark RSVP email as sent:", deliveryError);
+      }
+    } catch (emailError) {
+      // Keep the claim: one recipient may already have accepted the message.
+      const { error: failureError } = await serviceClient
+        .from("rsvp_email_deliveries")
+        .update({ failed_at: new Date().toISOString() })
+        .eq("rsvp_id", rsvp.id)
+        .eq("rsvp_updated_at", rsvp.updated_at);
+
+      if (failureError) {
+        console.error("Unable to mark RSVP email as failed:", failureError);
+      }
+      throw emailError;
+    }
 
     return jsonResponse(request, { ok: true });
   } catch (error) {
