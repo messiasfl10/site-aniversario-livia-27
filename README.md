@@ -25,6 +25,7 @@ O foco do site está nas informações da festa, no controle dos convites e no R
 - Geração criptográfica dos códigos de convite diretamente no Supabase.
 - Criação, edição e ativação de convidados por RPCs administrativas.
 - Criação, edição e exclusão de RSVPs por operações transacionais no banco.
+- Envio de e-mail para convidado e administrador após criação ou atualização do RSVP.
 - Consulta, filtragem, ordenação e exclusão de RSVPs.
 - Exportação de convidados e confirmações em CSV.
 - CSP configurada nas páginas públicas e administrativas, sem `unsafe-inline` para scripts.
@@ -101,7 +102,7 @@ A idade comemorada é calculada automaticamente a partir da data de nascimento e
 css/                         Estilos públicos, RSVP, login e Admin
 docs/                        Scripts e instruções do Supabase
 js/                          Configuração e lógica do frontend
-supabase/functions/          Edge Function de acesso por convite
+supabase/functions/          Edge Functions de acesso por convite e notificações
 admin-*.html                 Páginas do painel administrativo
 index.html                   Página inicial
 login.html                   Acesso do convidado
@@ -114,14 +115,27 @@ rsvp.html                    Confirmação de presença
 2. Execute as instruções de [`docs/rebuild_runbook.md`](docs/rebuild_runbook.md).
 3. Ative o login anônimo em **Authentication > Providers > Anonymous**.
 4. Informe a URL do projeto e a chave pública em `js/supabase.js`.
-5. Configure os secrets da função `claim-invite` usando `supabase/functions/.env.example` como referência.
-6. Publique a Edge Function `claim-invite`.
+5. Configure os secrets das funções usando `supabase/functions/.env.example` como referência.
+6. Publique as Edge Functions `claim-invite` e `notify-rsvp`.
 7. Configure o Cloudflare Turnstile conforme [`docs/turnstile_setup.md`](docs/turnstile_setup.md).
 8. Informe a Site Key pública em `js/captcha-config.js`.
 9. Crie o usuário administrativo no Supabase Auth e vincule-o à tabela `admin_users`.
 10. Confira a configuração do evento em `js/event-config.js`.
 
 Para validar a instalação do banco, utilize [`docs/supabase_verify.sql`](docs/supabase_verify.sql).
+
+## Notificações de RSVP
+
+Quando um convidado cria ou atualiza a confirmação de presença, o frontend chama a Edge Function `notify-rsvp` após o RSVP ser salvo com sucesso.
+
+A função valida a sessão do convidado pelo Supabase Auth e envia:
+
+- um e-mail de confirmação para o endereço informado no formulário;
+- um e-mail de notificação para `ADMIN_EMAIL`.
+
+A configuração usa SMTP via Edge Function. O passo a passo completo para gerar senha de app, cadastrar secrets, publicar a função e testar está em [`docs/rsvp_email_notifications.md`](docs/rsvp_email_notifications.md).
+
+O envio de e-mail é tratado como etapa secundária: se a notificação falhar, o RSVP permanece salvo e a falha fica registrada nos logs da Edge Function.
 
 ## Execução local
 

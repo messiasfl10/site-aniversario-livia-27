@@ -15,10 +15,19 @@
     return { data: data?.[0] || null, error };
   }
 
+  async function notifyRSVP(action, rsvp) {
+    return supabaseClient.functions.invoke("notify-rsvp", {
+      body: {
+        action,
+        rsvp,
+      },
+    });
+  }
+
   async function markGuestConfirmed(guest) {
     guest.confirmed = true;
     return { error: null };
   }
 
-  window.GuestData = { loadRSVP, markGuestConfirmed, saveRSVP };
+  window.GuestData = { loadRSVP, markGuestConfirmed, notifyRSVP, saveRSVP };
 })();

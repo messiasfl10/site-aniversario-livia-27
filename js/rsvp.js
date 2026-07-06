@@ -524,6 +524,18 @@ form.addEventListener("submit", async (e) => {
       console.error(guestError);
     }
 
+    if (existingRSVP) {
+      GuestData.notifyRSVP(wasEditing ? "updated" : "created", existingRSVP)
+        .then(({ error: notifyError }) => {
+          if (notifyError) {
+            console.error("RSVP notification failed:", notifyError);
+          }
+        })
+        .catch((notifyError) => {
+          console.error("RSVP notification failed:", notifyError);
+        });
+    }
+
     document.getElementById("successMessage").style.display = "block";
 
     button.innerText = "Atualizar confirmação";
