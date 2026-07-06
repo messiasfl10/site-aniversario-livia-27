@@ -73,6 +73,12 @@ SMTP_FROM_EMAIL=Aniversário da Livia - 27 Anos <seu-email@gmail.com>
 ALLOWED_ORIGINS=https://usuario.github.io,http://localhost:8000,http://127.0.0.1:8000
 ```
 
+Na porta `587`, `SMTP_SECURE=false` indica que a conexão começa sem TLS
+implícito e é elevada obrigatoriamente para TLS por STARTTLS. A Edge Function
+usa `requireTLS` e exige no mínimo TLS 1.2, portanto o envio falha se o servidor
+não oferecer uma conexão criptografada. Como alternativa, a porta `465` usa
+TLS implícito e deve ser configurada com `SMTP_SECURE=true`.
+
 `ADMIN_EMAIL` é o e-mail que receberá as notificações administrativas.
 
 `SMTP_USER` é a conta que enviará os e-mails.

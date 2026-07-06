@@ -54,6 +54,10 @@ SMTP_PASS=sua-senha-de-app
 SMTP_FROM_EMAIL=Aniversário da Livia <seu-email@gmail.com>
 ```
 
+Na porta `587`, `SMTP_SECURE=false` utiliza STARTTLS obrigatório. A função
+recusa o envio quando TLS não está disponível e exige no mínimo TLS 1.2. Para
+TLS implícito na porta `465`, use `SMTP_SECURE=true`.
+
 O passo a passo completo está em [`docs/rsvp_email_notifications.md`](rsvp_email_notifications.md).
 
 ## Deploy

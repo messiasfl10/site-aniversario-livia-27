@@ -34,9 +34,14 @@ const mailer = nodemailer.createTransport({
   host: smtpHost,
   port: smtpPort,
   secure: smtpSecure,
+  // Port 587 starts without implicit TLS, then must upgrade via STARTTLS.
+  requireTLS: !smtpSecure,
   auth: {
     user: smtpUser,
     pass: smtpPass,
+  },
+  tls: {
+    minVersion: "TLSv1.2",
   },
 });
 
