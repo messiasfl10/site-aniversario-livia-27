@@ -4,6 +4,41 @@ Todas as mudanças relevantes deste projeto serão registradas aqui.
 
 O formato segue uma adaptação simples do [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/), com versionamento semântico quando fizer sentido para o projeto.
 
+## [2.2] - 2026-07-06
+
+### Adicionado
+
+- Edge Function `notify-rsvp` para enviar notificações de RSVP por e-mail.
+- Confirmação por e-mail para o convidado após criação ou atualização do RSVP.
+- Notificação administrativa por e-mail para `ADMIN_EMAIL`.
+- Suporte a SMTP com configuração por secrets do Supabase.
+- Documentação completa em `docs/rsvp_email_notifications.md`.
+- Documento de release em `docs/release-v2.2.md`.
+
+### Alterado
+
+- Fluxo público de RSVP passou a chamar `notify-rsvp` após salvar a resposta com sucesso.
+- Mensagens de e-mail agora usam concordância diferente para convite individual e convite de casal.
+- Assuntos e corpos dos e-mails receberam coração roxo para combinar com o tom do convite.
+- E-mail administrativo passou a exibir tipo de convite e respostas dos membros quando o convite é de casal.
+- `supabase/functions/.env.example` passou a listar os secrets SMTP necessários.
+- README passou a documentar a existência das notificações de RSVP e apontar para o guia completo.
+
+### Segurança
+
+- Credenciais SMTP ficam restritas aos secrets do Supabase.
+- A Edge Function valida a sessão do convidado antes de enviar e-mails.
+- O RSVP enviado para notificação é conferido contra o convidado autenticado.
+- Conteúdo dinâmico dos e-mails HTML passa por escape antes da renderização.
+
+### Validado
+
+- Testes manuais de criação e atualização de RSVP.
+- Testes manuais de e-mail para convite individual e convite de casal.
+- Recebimento de e-mail pelo convidado e pelo administrador.
+- `node --check js/guest-data.js`.
+- `node --check js/rsvp.js`.
+
 ## [1.1] - 2026-07-05
 
 ### Adicionado
