@@ -4,7 +4,7 @@ Todas as mudanças relevantes deste projeto serão registradas aqui.
 
 O formato segue uma adaptação simples do [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/), com versionamento semântico quando fizer sentido para o projeto.
 
-## [2.3] - 2026-07-08
+## [1.3] - 2026-07-08
 
 ### Adicionado
 
@@ -14,7 +14,7 @@ O formato segue uma adaptação simples do [Keep a Changelog](https://keepachang
 - Ação rápida nos detalhes do convidado para marcar o convite como enviado ou não enviado.
 - Exportação do status de envio no CSV de convidados.
 - Migration `20260708000000_add_guest_invite_sent.sql`.
-- Documento de release em `docs/release-v2.3.md`.
+- Documento de release em `docs/release-v1.3.md`.
 
 ### Alterado
 
@@ -27,7 +27,7 @@ O formato segue uma adaptação simples do [Keep a Changelog](https://keepachang
 - `node --check js/admin-guests.js`.
 - Revisão dos scripts SQL de setup, migration e verificação.
 
-## [2.2] - 2026-07-06
+## [1.2] - 2026-07-06
 
 ### Adicionado
 
@@ -36,7 +36,7 @@ O formato segue uma adaptação simples do [Keep a Changelog](https://keepachang
 - Notificação administrativa por e-mail para `ADMIN_EMAIL`.
 - Suporte a SMTP com configuração por secrets do Supabase.
 - Documentação completa em `docs/rsvp_email_notifications.md`.
-- Documento de release em `docs/release-v2.2.md`.
+- Documento de release em `docs/release-v1.2.md`.
 
 ### Alterado
 

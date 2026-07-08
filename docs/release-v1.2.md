@@ -1,4 +1,4 @@
-# Release v2.2 - Aniversário da Livia - 27 Anos
+# Release v1.2 - Aniversário da Livia - 27 Anos
 
 Data: 2026-07-06
 

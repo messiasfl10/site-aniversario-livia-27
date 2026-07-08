@@ -172,7 +172,7 @@ Abrir os arquivos diretamente com `file://` pode impedir alguns recursos de aute
 
 As mudanças relevantes ficam registradas em [`CHANGELOG.md`](CHANGELOG.md).
 
-Release atual documentada: **v2.3**.
+Release atual documentada: **v1.3**.
 
 ## Manutenção
 
