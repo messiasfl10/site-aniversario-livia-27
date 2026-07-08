@@ -55,14 +55,15 @@ em duas etapas e nunca use a senha normal da conta. O guia completo está em
 `docs/rsvp_email_notifications.md`.
 
 8. Configure o Turnstile conforme `docs/turnstile_setup.md`.
-9. Cadastre convites no painel. Para casal, use `invite_type = couple`; para individual, `individual`.
+9. Cadastre convites no painel. Para casal, use `invite_type = couple`; para individual, `individual`. Use o campo **Convite já enviado** quando estiver importando ou ajustando um convite que já foi disparado fora do painel.
 10. Gere a mensagem de convite no painel de convidados e confira se ela mostra:
     - tratamento correto para individual ou casal;
     - link direto para o site principal;
     - link do cardápio e tratamento correto da frase para individual ou casal;
     - código de convite correto;
     - instruções de confirmação e prazo de RSVP.
-11. Teste: admin, convite inválido, individual, casal, RSVP Sim/Não, edição do RSVP, e-mails do convidado e administrador, bloqueio de envio duplicado, geração/cópia da mensagem de convite e logout.
+11. Depois de enviar a mensagem, marque o convite como enviado e confira o filtro **Convite > Enviados/Não enviados**.
+12. Teste: admin, convite inválido, individual, casal, RSVP Sim/Não, edição do RSVP, e-mails do convidado e administrador, bloqueio de envio duplicado, geração/cópia da mensagem de convite, marcação de convite enviado e logout.
 
 ## Runbook de atualização e operação
 
@@ -73,6 +74,8 @@ supabase link --project-ref SEU_PROJECT_REF
 supabase db push
 supabase functions deploy notify-rsvp
 ```
+
+Depois de aplicar migrations que alteram convidados, confira `docs/supabase_verify.sql`. Para a release com controle de envio, o resumo deve mostrar `invite_sent_column_ok` e `invite_sent_rpc_ok` como `true`.
 
 Depois, envie ou atualize um RSVP e consulte `rsvp_email_deliveries` pelo SQL
 Editor usando o ID do RSVP. `sent_at` preenchido indica sucesso; `failed_at`

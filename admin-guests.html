@@ -84,6 +84,15 @@
           </div>
 
           <div class="admin-filter-field">
+            <label for="guestInviteSentFilter">Convite</label>
+            <select id="guestInviteSentFilter">
+              <option value="">Todos</option>
+              <option value="sent">Enviados</option>
+              <option value="pending">Não enviados</option>
+            </select>
+          </div>
+
+          <div class="admin-filter-field">
             <label for="guestTypeFilter">Tipo</label>
             <select id="guestTypeFilter">
               <option value="">Todos</option>
@@ -127,6 +136,11 @@
                 <th>
                   <button class="admin-sort-button" data-guest-sort="confirmed">
                     Confirmado
+                  </button>
+                </th>
+                <th>
+                  <button class="admin-sort-button" data-guest-sort="inviteSent">
+                    Enviado
                   </button>
                 </th>
                 <th>
@@ -202,6 +216,13 @@
           <div class="admin-form-group">
             <label>Quantidade de Acompanhantes</label>
             <input type="number" id="guestMaxGuestsInput" min="0" value="0" />
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-checkbox-label">
+              <input type="checkbox" id="guestInviteSentInput" />
+              Convite já enviado
+            </label>
           </div>
 
           <button type="submit" class="admin-save-button">

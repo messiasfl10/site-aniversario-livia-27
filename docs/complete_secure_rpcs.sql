@@ -1,7 +1,10 @@
 -- Execute uma vez no SQL Editor após add_secure_invite_generation.sql.
 -- Centraliza as mutações administrativas e remove escrita direta nas tabelas.
 
-create or replace function public.update_guest_details(target_guest_id uuid, guest_name text, guest_invite_type text, guest_couple_members jsonb, guest_max_guests integer)
+alter table public.guests
+  add column if not exists invite_sent boolean not null default false;
+
+create or replace function public.update_guest_details(target_guest_id uuid, guest_name text, guest_invite_type text, guest_couple_members jsonb, guest_max_guests integer, guest_invite_sent boolean)
 returns public.guests language plpgsql security definer set search_path = public as $$
 declare updated_guest public.guests;
 begin
@@ -9,8 +12,18 @@ begin
   if nullif(trim(guest_name), '') is null then raise exception 'Nome do convite é obrigatório' using errcode = '22023'; end if;
   if guest_invite_type not in ('individual','couple') then raise exception 'Tipo de convite inválido' using errcode = '22023'; end if;
   if guest_max_guests < 0 then raise exception 'Quantidade de acompanhantes inválida' using errcode = '22023'; end if;
-  update public.guests set name=trim(guest_name),invite_type=guest_invite_type,couple_members=case when guest_invite_type='couple' then guest_couple_members else null end,max_guests=guest_max_guests
+  update public.guests set name=trim(guest_name),invite_type=guest_invite_type,couple_members=case when guest_invite_type='couple' then guest_couple_members else null end,max_guests=guest_max_guests,invite_sent=coalesce(guest_invite_sent,false)
   where id=target_guest_id returning * into updated_guest;
+  if updated_guest.id is null then raise exception 'Convidado não encontrado' using errcode = 'P0002'; end if;
+  return updated_guest;
+end; $$;
+
+create or replace function public.set_guest_invite_sent(target_guest_id uuid, next_invite_sent boolean)
+returns public.guests language plpgsql security definer set search_path = public as $$
+declare updated_guest public.guests;
+begin
+  if not public.is_admin() then raise exception 'Acesso administrativo necessário' using errcode = '42501'; end if;
+  update public.guests set invite_sent=coalesce(next_invite_sent,false) where id=target_guest_id returning * into updated_guest;
   if updated_guest.id is null then raise exception 'Convidado não encontrado' using errcode = 'P0002'; end if;
   return updated_guest;
 end; $$;
@@ -75,8 +88,8 @@ begin
   return query select * from public.rsvps where guest_id=gid;
 end; $$;
 
-revoke all on function public.update_guest_details(uuid,text,text,jsonb,integer),public.set_guest_active(uuid,boolean),public.save_admin_rsvp(uuid,text,text,jsonb,text,text,text),public.delete_admin_rsvp(uuid) from public,anon;
-grant execute on function public.update_guest_details(uuid,text,text,jsonb,integer),public.set_guest_active(uuid,boolean),public.save_admin_rsvp(uuid,text,text,jsonb,text,text,text),public.delete_admin_rsvp(uuid) to authenticated;
+revoke all on function public.update_guest_details(uuid,text,text,jsonb,integer,boolean),public.set_guest_invite_sent(uuid,boolean),public.set_guest_active(uuid,boolean),public.save_admin_rsvp(uuid,text,text,jsonb,text,text,text),public.delete_admin_rsvp(uuid) from public,anon;
+grant execute on function public.update_guest_details(uuid,text,text,jsonb,integer,boolean),public.set_guest_invite_sent(uuid,boolean),public.set_guest_active(uuid,boolean),public.save_admin_rsvp(uuid,text,text,jsonb,text,text,text),public.delete_admin_rsvp(uuid) to authenticated;
 
 revoke insert,update,delete on public.guests,public.rsvps from authenticated;
 grant select on public.guests,public.rsvps to authenticated;

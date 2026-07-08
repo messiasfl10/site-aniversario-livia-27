@@ -11,6 +11,7 @@ create table if not exists public.guests (
   active boolean not null default true,
   access_count integer not null default 0,
   last_access timestamptz,
+  invite_sent boolean not null default false,
   invite_type text not null default 'individual' check (invite_type in ('individual','couple')),
   couple_members jsonb,
   constraint couple_members_array check (couple_members is null or jsonb_typeof(couple_members) = 'array')
@@ -72,7 +73,8 @@ create or replace function public.create_guest_with_invite(
   guest_name text,
   guest_invite_type text default 'individual',
   guest_couple_members jsonb default null,
-  guest_max_guests integer default 0
+  guest_max_guests integer default 0,
+  guest_invite_sent boolean default false
 )
 returns public.guests
 language plpgsql
@@ -117,11 +119,11 @@ begin
     begin
       insert into public.guests (
         name, invite_code, invite_type, couple_members, max_guests,
-        confirmed, active, access_count
+        confirmed, active, access_count, invite_sent
       ) values (
         trim(guest_name), generated_code, guest_invite_type,
         case when guest_invite_type = 'couple' then guest_couple_members else null end,
-        guest_max_guests, false, true, 0
+        guest_max_guests, false, true, 0, coalesce(guest_invite_sent, false)
       )
       returning * into created_guest;
 
@@ -133,7 +135,7 @@ begin
 end;
 $$;
 
-create or replace function public.update_guest_details(target_guest_id uuid, guest_name text, guest_invite_type text, guest_couple_members jsonb, guest_max_guests integer)
+create or replace function public.update_guest_details(target_guest_id uuid, guest_name text, guest_invite_type text, guest_couple_members jsonb, guest_max_guests integer, guest_invite_sent boolean)
 returns public.guests language plpgsql security definer set search_path = public as $$
 declare updated_guest public.guests;
 begin
@@ -141,8 +143,18 @@ begin
   if nullif(trim(guest_name), '') is null then raise exception 'Nome do convite é obrigatório' using errcode = '22023'; end if;
   if guest_invite_type not in ('individual','couple') then raise exception 'Tipo de convite inválido' using errcode = '22023'; end if;
   if guest_max_guests < 0 then raise exception 'Quantidade de acompanhantes inválida' using errcode = '22023'; end if;
-  update public.guests set name=trim(guest_name),invite_type=guest_invite_type,couple_members=case when guest_invite_type='couple' then guest_couple_members else null end,max_guests=guest_max_guests
+  update public.guests set name=trim(guest_name),invite_type=guest_invite_type,couple_members=case when guest_invite_type='couple' then guest_couple_members else null end,max_guests=guest_max_guests,invite_sent=coalesce(guest_invite_sent,false)
   where id=target_guest_id returning * into updated_guest;
+  if updated_guest.id is null then raise exception 'Convidado não encontrado' using errcode = 'P0002'; end if;
+  return updated_guest;
+end; $$;
+
+create or replace function public.set_guest_invite_sent(target_guest_id uuid, next_invite_sent boolean)
+returns public.guests language plpgsql security definer set search_path = public as $$
+declare updated_guest public.guests;
+begin
+  if not public.is_admin() then raise exception 'Acesso administrativo necessário' using errcode = '42501'; end if;
+  update public.guests set invite_sent=coalesce(next_invite_sent,false) where id=target_guest_id returning * into updated_guest;
   if updated_guest.id is null then raise exception 'Convidado não encontrado' using errcode = 'P0002'; end if;
   return updated_guest;
 end; $$;
@@ -249,10 +261,10 @@ revoke all on sequence public.rsvp_email_deliveries_id_seq from anon, authentica
 grant select on public.guests,public.rsvps to authenticated;
 revoke all on function public.register_guest_access(uuid) from public,anon,authenticated;
 grant execute on function public.register_guest_access(uuid) to service_role;
-revoke all on function public.create_guest_with_invite(text,text,jsonb,integer) from public,anon;
-grant execute on function public.create_guest_with_invite(text,text,jsonb,integer) to authenticated;
-revoke all on function public.update_guest_details(uuid,text,text,jsonb,integer),public.set_guest_active(uuid,boolean),public.save_admin_rsvp(uuid,text,text,jsonb,text,text,text),public.delete_admin_rsvp(uuid) from public,anon;
-grant execute on function public.update_guest_details(uuid,text,text,jsonb,integer),public.set_guest_active(uuid,boolean),public.save_admin_rsvp(uuid,text,text,jsonb,text,text,text),public.delete_admin_rsvp(uuid) to authenticated;
+revoke all on function public.create_guest_with_invite(text,text,jsonb,integer,boolean) from public,anon;
+grant execute on function public.create_guest_with_invite(text,text,jsonb,integer,boolean) to authenticated;
+revoke all on function public.update_guest_details(uuid,text,text,jsonb,integer,boolean),public.set_guest_invite_sent(uuid,boolean),public.set_guest_active(uuid,boolean),public.save_admin_rsvp(uuid,text,text,jsonb,text,text,text),public.delete_admin_rsvp(uuid) from public,anon;
+grant execute on function public.update_guest_details(uuid,text,text,jsonb,integer,boolean),public.set_guest_invite_sent(uuid,boolean),public.set_guest_active(uuid,boolean),public.save_admin_rsvp(uuid,text,text,jsonb,text,text,text),public.delete_admin_rsvp(uuid) to authenticated;
 grant execute on function public.is_admin(),public.current_guest_id(),public.get_current_guest_profile(),public.save_current_rsvp(text,text,jsonb,text,text,text) to authenticated;
 
 -- Depois de criar o usuário no Supabase Auth:

@@ -1832,6 +1832,21 @@ body .admin-page:not(.admin-dashboard-page) > .admin-header { margin-bottom: 1re
   box-shadow: 0 0 0 3px rgba(86, 0, 114, .1);
 }
 
+.admin-form-group .admin-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.admin-form-group .admin-checkbox-label input {
+  width: auto;
+  min-height: auto;
+  padding: 0;
+  accent-color: #7d1598;
+}
+
 .admin-save-button {
   min-height: 48px;
   margin-top: .35rem;

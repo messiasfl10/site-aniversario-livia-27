@@ -4,6 +4,29 @@ Todas as mudanças relevantes deste projeto serão registradas aqui.
 
 O formato segue uma adaptação simples do [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/), com versionamento semântico quando fizer sentido para o projeto.
 
+## [2.3] - 2026-07-08
+
+### Adicionado
+
+- Campo administrativo `invite_sent` para indicar se o convite já foi enviado.
+- Filtro, coluna, ordenação e badge de envio na gestão de convidados.
+- Checkbox de envio no modal de criação e edição de convidados.
+- Ação rápida nos detalhes do convidado para marcar o convite como enviado ou não enviado.
+- Exportação do status de envio no CSV de convidados.
+- Migration `20260708000000_add_guest_invite_sent.sql`.
+- Documento de release em `docs/release-v2.3.md`.
+
+### Alterado
+
+- RPCs administrativas de criação e edição de convidados passaram a receber `guest_invite_sent`.
+- Scripts de instalação, atualização e verificação do Supabase passaram a contemplar a coluna `invite_sent` e a RPC `set_guest_invite_sent`.
+- README e runbook de reconstrução passaram a documentar o controle de envio de convites.
+
+### Validado
+
+- `node --check js/admin-guests.js`.
+- Revisão dos scripts SQL de setup, migration e verificação.
+
 ## [2.2] - 2026-07-06
 
 ### Adicionado

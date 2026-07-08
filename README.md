@@ -15,13 +15,14 @@ O foco do site está nas informações da festa, no controle dos convites e no R
 - Acesso privado por código de convite.
 - Convites individuais e para casais.
 - Geração de mensagem personalizada para envio do convite por WhatsApp, Instagram ou outro canal.
+- Marcação administrativa para controlar se o convite já foi enviado.
 - Controle da quantidade máxima de acompanhantes.
 - Identificação de acompanhantes como criança ou não criança, sem classificação por idade.
 - Confirmação ou recusa de presença.
 - Cadastro de telefone, e-mail, restrições alimentares e mensagem para a aniversariante.
 - Proteção do login com Cloudflare Turnstile e limitação de tentativas.
 - Painel administrativo com dashboard, indicadores e atalhos.
-- Gerenciamento de convidados, códigos, limites e status dos convites.
+- Gerenciamento de convidados, códigos, limites, status e envio dos convites.
 - Geração criptográfica dos códigos de convite diretamente no Supabase.
 - Criação, edição e ativação de convidados por RPCs administrativas.
 - Criação, edição e exclusão de RSVPs por operações transacionais no banco.
@@ -75,6 +76,8 @@ A mensagem inclui:
 - Prazo limite de confirmação.
 
 O texto pode ser revisado no modal antes de copiar e colar no WhatsApp, Instagram ou em qualquer outro canal de envio.
+
+Depois de enviar a mensagem, o administrador pode marcar o convite como **enviado** no cadastro ou nos detalhes do convidado. A página de convidados permite filtrar, ordenar e exportar esse status para acompanhar quem ainda precisa receber o convite.
 
 ## Configuração central do evento
 
@@ -169,7 +172,7 @@ Abrir os arquivos diretamente com `file://` pode impedir alguns recursos de aute
 
 As mudanças relevantes ficam registradas em [`CHANGELOG.md`](CHANGELOG.md).
 
-Release atual documentada: **v1.1**.
+Release atual documentada: **v2.3**.
 
 ## Manutenção
 
