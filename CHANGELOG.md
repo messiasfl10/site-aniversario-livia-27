@@ -21,13 +21,13 @@ O formato segue uma adaptação simples do [Keep a Changelog](https://keepachang
 - RPCs administrativas de criação e edição de convidados passaram a receber `guest_invite_sent`.
 - Scripts de instalação, atualização e verificação do Supabase passaram a contemplar a coluna `invite_sent` e a RPC `set_guest_invite_sent`.
 - README e runbook de reconstrução passaram a documentar o controle de envio de convites.
-- Metadados Open Graph passaram a usar a imagem dedicada `assets/images/share/og-image.jpg` em `1200x630` para melhorar a prévia no WhatsApp mobile.
+- Metadados Open Graph passaram a usar a imagem dedicada e otimizada `assets/images/share/og-image.jpg` em `1200x630`, com cache-busting na URL, para melhorar a prévia no WhatsApp mobile.
 
 ### Validado
 
 - `node --check js/admin-guests.js`.
 - Revisão dos scripts SQL de setup, migration e verificação.
-- Verificação local das dimensões da imagem Open Graph em `1200x630`.
+- Verificação local da imagem Open Graph em `1200x630` e com peso aproximado de 164 KB.
 
 ## [1.2] - 2026-07-06
 

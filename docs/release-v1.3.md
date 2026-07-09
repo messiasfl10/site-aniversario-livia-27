@@ -15,8 +15,9 @@ Esta release adiciona um controle administrativo para acompanhar quais convites 
 - Badge de envio no resumo dos detalhes do convidado.
 - Ação rápida para marcar o convite como enviado ou não enviado.
 - CSV de convidados agora inclui o status de envio.
-- Imagem de compartilhamento dedicada em `assets/images/share/og-image.jpg`.
+- Imagem de compartilhamento dedicada e otimizada em `assets/images/share/og-image.jpg`.
 - Metadados `og:image`, `og:image:width` e `og:image:height` ajustados para `1200x630`.
+- Cache-busting aplicado na URL da imagem dos metadados para forçar nova leitura pelos previews.
 
 ## Banco de dados
 
@@ -51,7 +52,7 @@ O resumo deve mostrar `invite_sent_column_ok` e `invite_sent_rpc_ok` como `true`
 - Ação rápida para alternar entre enviado e não enviado.
 - Filtro e ordenação pela coluna **Enviado**.
 - Exportação CSV com o status de envio.
-- Verificação local da imagem Open Graph em `1200x630`.
+- Verificação local da imagem Open Graph em `1200x630` e com peso aproximado de 164 KB.
 - `node --check js/admin-guests.js`.
 
 ## Observações de publicação
