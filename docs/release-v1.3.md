@@ -1,6 +1,6 @@
 # Release v1.3 - Aniversário da Livia - 27 Anos
 
-Data: 2026-07-09
+Data: 2026-07-10
 
 ## Resumo
 
